@@ -1,0 +1,600 @@
+html {
+    height: 100%;
+}
+
+body {
+    font: 14px/18px Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+}
+
+.wrapper {
+    min-width: 800px;
+    max-width: 1366px;
+    margin: 0 auto;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+}
+
+/* Header
+-----------------------------------------------------------------------------*/
+.header {
+    height: 100px;
+
+    background: #8dc347; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(left bottom, #8dc347, #38aeac); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(left bottom, #8dc347, #38aeac); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(left bottom, #8dc347, #38aeac); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to top right, #8dc347, #38aeac); /* Standard syntax (must be last) */
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    position: fixed;
+    width: 100%;
+    max-width: 1366px;
+    min-width: 800px;
+    z-index: 100;
+}
+
+.header .header-text {
+    width: 70%;
+    color: white;
+    padding-left: 10%;
+    line-height: 1.5;
+}
+
+.header .welcome-field {
+    width: 100%;
+    padding: 0;
+    text-overflow: ellipsis;
+    background: none;
+    border: none;
+    box-shadow: none;
+    color: inherit;
+    font-weight: inherit;
+    text-shadow: inherit;
+}
+
+.header .header-elements {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Middle
+-----------------------------------------------------------------------------*/
+.content {
+    /*padding: 0 0 30px;*/
+    padding-top: 100px;
+    padding-bottom: 30px;
+
+    margin: auto;
+    min-width: 800px;
+    width: 90%;
+}
+
+/* Footer
+-----------------------------------------------------------------------------*/
+.footer {
+    margin: -30px auto 0;
+    min-width: 800px;
+    max-width: 1366px;
+    height: 30px;
+    line-height: 30px;
+    background: #965c9a;
+    position: relative;
+    text-align: center;
+}
+
+/*Login*/
+.login {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.login-form {
+    text-align: center;
+    width: 300px;
+}
+
+#loginForm{
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-button {
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+    height: 35px;
+}
+
+.login-customer-button {
+    display: flex;
+    align-items: baseline;
+    height: 35px;
+    margin-left: 20px;
+}
+
+.item1 {
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-forgot-link {
+    margin-bottom: 15px;
+    font-variant: normal;
+    margin-left: 90px;
+}
+
+.admin-app-button{
+    width: 310px;
+    height: 50px;
+    margin-top: 50px;
+}
+
+/*Change Password*/
+.attention-message {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+
+}
+
+.attention-message .item {
+    width: 380px;
+    margin-top: 20px;
+    margin-right: 30px;
+    margin-left: 60px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.change-pass {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.change-pass .item {
+    width: 350px;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
+.change-pass .continue {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    height: 35px;
+    justify-content: flex-start;
+    margin-left: 50px;
+
+}
+
+.change-pass .ui-message-error {
+    min-width: 280px;
+}
+
+/*Forgot password*/
+.forgot-form {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    justify-content: flex-start;
+}
+
+.forgot-input {
+    margin-top: 5px;
+    height: 50px;
+}
+
+#forgotPasswordDialog > .ui-dialog-titlebar {
+    text-align-last: center;
+}
+
+#forgotPasswordDialog_title {
+    float: none;
+}
+
+/*Add-Edit customer*/
+.container-A {
+    width: 740px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.item {
+    width: 370px;
+    min-height: 50px;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.login-form .item {
+    width: 100%;
+}
+
+.item > input {
+    width: 150px;
+}
+
+.item > span {
+    width: 160px;
+}
+
+.item > span > .ui-inputfield {
+    width: 115px;
+}
+
+.item > label {
+    font-weight: bold;
+    width: 170px;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.login-form .item > label {
+    width: 80px;
+    text-align: center;
+}
+
+.item > .ui-selectonemenu {
+    width: 158px !important;
+}
+
+.ui-widget {
+    font-size: 1em;
+}
+
+.commandButtons-1 {
+    display: flex;
+    justify-content: space-around;
+    /*margin-top: 30px;*/
+}
+
+.commandButtons-2 {
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+}
+
+.dialog-text {
+    font-size: large;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.5;
+    margin: 8%;
+}
+
+.italic {
+    font-style: italic;
+}
+
+/*Style for Search Customer buttons
+-----------------------------------------------------------------------------*/
+.box1 {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.box2 {
+    margin-top: 20px;
+    margin-left: 75%;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.box3 {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.container-C {
+    margin-top: 5%;
+}
+
+/*.ui-datatable table {
+    width: 90% !important;
+    margin: 0 auto;
+}*/
+
+.ui-datatable-empty-message {
+    display: none;
+}
+
+.message {
+    margin-top: 20px;
+    font: 18px Arial, sans-serif;
+    font-weight: bold;
+}
+
+/*Error messages*/
+.ui-message-info, .ui-message-error, .ui-message-warn, .ui-message-fatal {
+    border: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 260px;
+    font-style: italic;
+    font-stretch: extra-condensed;
+    line-height: 1;
+    text-align: right;
+}
+
+.ui-outputlabel.ui-state-error {
+    background: none !important;
+}
+
+.ui-widget-content .ui-state-error {
+    background: rgba(254, 241, 236, 0.7) -webkit-gradient(
+            linear, left top, left bottom, from(rgb(255, 255, 255)), to(rgba(255, 255, 255, 0)));
+}
+
+.ui-messages-error, .ui-message-error {
+    background-color: initial !important;
+}
+
+.address-message .ui-message-error, .code-message .ui-message-error {
+    width: 300px;
+}
+
+.pass-message .ui-message-error {
+    width: 100%;
+}
+
+.errorMessages {
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.errorMessages .ui-message-error {
+    font-style: italic;
+    font-weight: bold;
+    font-size: large;
+    width: inherit;
+    background-color: initial !important;
+}
+
+.forgot-form .ui-message-error {
+    width: 185px;
+}
+
+.forgot-form-messages {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.forgot-form-messages .ui-message-error {
+    width: 100%;
+    text-align: center;
+}
+
+/* Table columns */
+.column30 {
+    width: 30%;
+    text-overflow: ellipsis;
+}
+
+.column20 {
+    width: 20%;
+}
+
+.column15 {
+    width: 15%;
+}
+
+.column10 {
+    width: 10%;
+}
+
+/*Customer Application Header MENU*/
+.header .ui-widget-header, .header .ui-widget-content {
+    background: none;
+    border: none;
+}
+
+.width-100, .tab-menu {
+    width: 100%;
+}
+
+.tab-menu ul {
+    display: flex;
+    padding: 0 !important;
+    /*flex-wrap: wrap;*/
+    /*justify-content: center;*/
+
+}
+
+.tab-menu ul li {
+    width: 100%;
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0 !important;
+}
+
+.tab-menu ul li a {
+    padding: 0.5em 0.5em !important;
+}
+
+.tab-menu .ui-helper-clearfix:after {
+    content: none !important;
+}
+
+.m-w-59 {
+    min-width: 59px
+}
+
+.m-w-77 {
+    width: 100%;
+    min-width: 77px
+}
+
+.m-w-83 {
+    min-width: 83px
+}
+
+.m-w-93 {
+    min-width: 93px
+}
+
+.m-w-123 {
+    min-width: 123px
+}
+
+.m-w-148 {
+    min-width: 148px
+}
+
+/*customerAccountBean*/
+.pGrid.ui-panelgrid tr,
+.pGrid.ui-panelgrid .ui-panelgrid-cell {
+    border: none;
+    background: none !important;
+}
+
+.accButton {
+    width: 260px;
+    height: 35px;
+}
+
+.accNoteText {
+    font-style: italic;
+}
+
+.cForm {
+    margin: 0 auto;
+    width: 75%;
+}
+
+.pGrid.ui-panelgrid .ui-panelgrid-cell {
+    padding: 4px 0;
+}
+
+.col-stl {
+    padding: 10px 0;
+}
+
+.crdstslb {
+    margin-right: 5px
+}
+
+.acctableheadertxt {
+    font-size: 150%;
+    font-weight: bold
+}
+
+ul, p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#accountDetailsDialog .ui-dialog-footer,
+#cardDetailsDialog .ui-dialog-footer {
+    height: 8px;
+}
+
+/*customer application Forgot Password page*/
+.bav-1 {
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 10px;
+}
+
+.bav-2 {
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+    margin: 10px;
+}
+
+.bav-3 {
+    font-family: Arial, sans-serif;
+    font-size: 3px;
+    margin: 10px;
+}
+
+/*---------------------------------------*/
+
+tr:nth-child(even) {
+    background-color: #f2f5f9
+}
+
+.font-bold {
+    font-weight: bold;
+}
+
+/*-----------------money_transfer-----------------*/
+
+.mtf {
+    position: absolute;
+    left: 40%;
+    right: 40%;
+    display: inline-block;
+    width: 400px;
+}
+.mtf-butt {
+    margin-top: 10px;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.mtf-msg{
+    margin-top: 20%;
+    justify-content: center;
+    font-size: medium;
+}
+
+.disabled-outputLabel{
+    color: #afafaf;
+}
+
+.mtf .ui-message-error {
+    text-align: left;
+}
+
+.mtf .ui-message-error .ui-message-error-detail{
+    margin-left: 0;
+}

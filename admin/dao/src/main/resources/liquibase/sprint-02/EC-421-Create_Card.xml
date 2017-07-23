@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="EC-409_Create_Card_Table" author="Titarenko" failOnError="true">
+        <comment>EC-409 Create Model + Liquibase scripts</comment>
+        
+        <createTable tableName="Card">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="varchar2(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cardNumber" type="varchar2(20)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="cardNumber"/>
+            </column>
+            <column name="cardHolder" type="varchar2(511)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="effectiveDate" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expirationDate" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cvv2" type="varchar2(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="accountId" type="bigint">
+                <constraints nullable="false"
+                             foreignKeyName="fk_account_card"
+                             references="Account(id)"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>

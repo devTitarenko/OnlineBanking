@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/admin/ClBank-admin.iml" filepath="$PROJECT_DIR$/admin/ClBank-admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/admin/dao/ClBank-admin-dao.iml" filepath="$PROJECT_DIR$/admin/dao/ClBank-admin-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/admin/service/ClBank-admin-service.iml" filepath="$PROJECT_DIR$/admin/service/ClBank-admin-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ui/ClBank-ui.iml" filepath="$PROJECT_DIR$/ui/ClBank-ui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/EIS_OnlineBanking.iml" filepath="$PROJECT_DIR$/.idea/EIS_OnlineBanking.iml" />
+    </modules>
+  </component>
+</project>

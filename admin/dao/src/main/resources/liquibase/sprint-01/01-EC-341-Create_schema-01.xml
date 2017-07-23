@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+
+    <changeSet id="01-EC-341-Create-Country-schema" author="Titarenko" failOnError="true">
+        <comment>EC-341 Create Domain model + Liquibase scripts, created table Country</comment>
+        <createTable tableName="Country">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="country" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="02-EC-341-Create-Address-schema" author="stud_akozarezniuk" failOnError="true">
+        <comment>EC-341 Create Domain model + Liquibase scripts, created table Address</comment>
+        <comment>http://odsstudent.exigengroup.com:8080/browse/EC-341</comment>
+        <createTable tableName="Address">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="country" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_address_country" references="Country(id)"/>
+            </column>
+            <column name="zip" type="char(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="03-EC-341-Create-Customer-schema" author="stud_akozarezniuk" failOnError="true">
+        <comment>EC-341 Create Domain model + Liquibase scripts, created table Customer</comment>
+        <comment>http://odsstudent.exigengroup.com:8080/browse/EC-341</comment>
+        <createTable tableName="Customer">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="firstName" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastName" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dateOfBirth" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="gender" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="maritalStatus" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="tin" type="varchar(10)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="customer_tin_unique"/>
+            </column>
+            <column name="passport" type="varchar(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dateOfIssue" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="regAddress" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_customer_address_reg" references="Address(id)"
+                             deleteCascade="true"/>
+            </column>
+            <column name="mailAddress" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_customer_address_mail" references="Address(id)"
+                             deleteCascade="true"/>
+            </column>
+            <column name="mobileNum" type="varchar(12)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="customers_mobile_unique"/>
+            </column>
+            <column name="email" type="varchar(320)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="pass" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="codeword" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="04-EC-341-Create-CustomerPassword-schema" author="stud_akozarezniuk" failOnError="true">
+        <comment>EC-341 Create Domain model + Liquibase scripts, created table CustomerPassword</comment>
+        <comment>http://odsstudent.exigengroup.com:8080/browse/EC-341</comment>
+        <createTable tableName="CustomerPassword">
+            <column name="customerId" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_customer_password" references="Customer(id)"/>
+            </column>
+            <column name="pass" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="customerId, pass"
+                       constraintName="pk_customer_password"
+                       tableName="CustomerPassword"/>
+    </changeSet>
+</databaseChangeLog>

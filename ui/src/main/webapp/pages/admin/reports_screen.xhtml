@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:body>
+    <ui:composition template="../default.xhtml">
+        <ui:define name="content">
+            <h:form id="reports">
+                <p:defaultCommand target="dummy"/>
+
+                <div class="box2" style="width: 230px">
+                    <p:commandButton value="#{msgs['reportsScreen.search']}"
+                                     immediate="true"
+                                     action="#{reportsBean.backToSearch}"/>
+
+                    <p:commandButton value="#{msgs['reportsScreen.exit']}"
+                                     immediate="true"
+                                     action="#{customerLoginBean.logout}"/>
+                </div>
+                <div style="margin-left: 70px;">
+                    <h2>#{msgs['reports.title']}</h2>
+                </div>
+                <div class="container-A"
+                     style="width: 350px;">
+
+                    <div class="item">
+                        <p:outputLabel for="firstName"
+                                       value="#{msgs['reports.firstName']}"/>
+                        <p:inputText id="firstName"
+                                     value="#{reportsBean.searchCriteria.firstNameCriteria}"
+                                     validatorMessage="#{msgs['Error.firstName.wrongFormat']}">
+                            <p:ajax event="keyup"
+                                    oncomplete="hideReportsErrMsg('firstName')"/>
+                            <f:validateRegex pattern="^([a-zA-Z]+[a-zA-Z\s\-]*){1,255}$"/>
+                        </p:inputText>
+                        <p:message id="m_firstName"
+                                   for="firstName"
+                                   display="text"/>
+                    </div>
+                    <div class="item">
+                        <p:outputLabel for="lastName"
+                                       value="#{msgs['reports.lastName']}"/>
+                        <p:inputText id="lastName"
+                                     value="#{reportsBean.searchCriteria.lastNameCriteria}"
+                                     validatorMessage="#{msgs['Error.lastName.wrongFormat']}">
+                            <p:ajax event="keyup"
+                                    oncomplete="hideReportsErrMsg('lastName')"/>
+                            <f:validateRegex pattern="^([a-zA-Z]+[a-zA-Z\s\-]*){1,255}$"/>
+                        </p:inputText>
+                        <p:message id="m_lastName"
+                                   for="lastName"
+                                   display="text"/>
+                    </div>
+                    <div class="item">
+                        <p:outputLabel for="accountType"
+                                       value="#{msgs['accountForm.Type']}"/>
+                        <p:selectOneMenu id="accountType"
+                                         value="#{reportsBean.searchCriteria.accountTypeCriteria}">
+                            <f:ajax execute="@this"
+                                    event="change"
+                                    render="m_accountType"/>
+                            <f:selectItem/>
+                            <f:selectItems value="#{reportsBean.accountTypes}"
+                                           var="accountType"
+                                           itemValue="#{accountType}"
+                                           itemLabel="#{accountType.name}"/>
+                        </p:selectOneMenu>
+                        <p:message id="m_accountType"
+                                   for="accountType"
+                                   display="text"/>
+                    </div>
+                    <div class="item">
+                        <p:outputLabel for="cardType"
+                                       value="#{msgs['cardForm.cardType']}"/>
+                        <p:selectOneMenu id="cardType"
+                                         value="#{reportsBean.searchCriteria.cardTypeCriteria}">
+                            <f:ajax execute="@this"
+                                    event="change"
+                                    render="m_cardType"/>
+                            <f:selectItem/>
+                            <f:selectItems value="#{reportsBean.cardTypes}"
+                                           var="cardType"
+                                           itemValue="#{cardType}"
+                                           itemLabel="#{cardType.name}"/>
+                        </p:selectOneMenu>
+                        <p:message id="m_cardType"
+                                   for="cardType"
+                                   display="text"/>
+                    </div>
+                    <div class="item">
+                        <p:outputLabel for="accountStatus"
+                                       value="#{msgs['reports.account.status']}"/>
+                        <p:selectOneMenu id="accountStatus"
+                                         value="#{reportsBean.searchCriteria.accountStatusCriteria}">
+                            <f:ajax execute="@this"
+                                    event="change"
+                                    render="m_accountStatus"/>
+                            <f:selectItem/>
+                            <f:selectItem itemLabel="#{msgs['reports.account.status.active']}" itemValue="${reportsBean.statusList[0]}"/>
+                            <f:selectItem itemLabel="#{msgs['reports.account.status.inactive']}" itemValue="${reportsBean.statusList[1]}"/>
+                        </p:selectOneMenu>
+                        <p:message id="m_accountStatus"
+                                   for="accountStatus"
+                                   display="text"/>
+                    </div>
+                    <div class="item">
+                        <p:outputLabel for="cardStatus"
+                                       value="#{msgs['reports.card.status']}"/>
+                        <p:selectOneMenu id="cardStatus"
+                                         value="#{reportsBean.searchCriteria.cardStatusCriteria}">
+                            <f:ajax execute="@this"
+                                    event="change"
+                                    render="m_cardStatus"/>
+                            <f:selectItem/>
+                            <f:selectItems value="#{reportsBean.status}"
+                                           var="cardStatus"
+                                           itemValue="#{cardStatus}"
+                                           itemLabel="#{cardStatus.name}"/>
+                        </p:selectOneMenu>
+                        <p:message id="m_cardStatus"
+                                   for="cardStatus"
+                                   display="text"/>
+                    </div>
+                    <div class="item" style="">
+                        <p:outputLabel for="accountValidFrom" value="#{msgs['reports.account_valid_from']}"/>
+                        <p:calendar id="accountValidFrom" widgetVar="accountValidFromVar"
+                                    value="#{reportsBean.searchCriteria.accountValidFrom}"
+                                    showOn="button"
+                                    navigator="true"
+                                    pattern="MM/dd/yyyy"
+                                    yearRange="-10:+35"
+                                    validatorMessage="#{msgs['Error.dateIssue.wrongFormat']}"
+                                    converterMessage="#{msgs['Error.dateIssue.wrongFormat']}">
+                            <p:ajax event="dateSelect" render="m_accountValidFrom"/>
+                            <p:ajax event="keyup"
+                                    oncomplete="hideReportsCalendarErrMsg('accountValidFrom', 'accountValidFromVar')"/>
+                        </p:calendar>
+                        <p:message id="m_accountValidFrom" for="accountValidFrom" display="text"/>
+                    </div>
+                    <div class="item">
+                        <p:outputLabel for="accountValidTo" value="#{msgs['reports.account_valid_to']}"/>
+                        <p:calendar id="accountValidTo" widgetVar="accountValidToVar"
+                                    value="#{reportsBean.searchCriteria.accountValidTo}"
+                                    showOn="button"
+                                    navigator="true"
+                                    pattern="MM/dd/yyyy"
+                                    yearRange="-10:+35"
+                                    validatorMessage="#{msgs['Error.effectiveDate.wrongFormat']}"
+                                    converterMessage="#{msgs['Error.dateIssue.wrongFormat']}">
+                            <p:ajax event="dateSelect" render="m_accountValidTo"/>
+                            <p:ajax event="keyup"
+                                    oncomplete="hideReportsCalendarErrMsg('accountValidTo', 'accountValidToVar')"/>
+                        </p:calendar>
+                        <p:message id="m_accountValidTo" for="accountValidTo" display="text"/>
+                    </div>
+                </div>
+                <div class="box3"
+                     style="width: 350px; margin-left: 190px;">
+
+                    <p:commandButton id="downloadLink" value="Excel Report" ajax="false" actionListener="#{reportsBean.prepDownload}">
+                            <p:fileDownload value="#{reportsBean.download}" />
+                        </p:commandButton>
+
+
+                    <p:commandButton value="#{msgs['reports.button.html_report']}"
+                                     action="#{reportsBean.goToHtmlReport}"
+                                     onclick="searchFormSpaceTrimmer()"
+                                     update="reports">
+                    </p:commandButton>
+                    <p:commandButton value="#{msgs['reports.button.clear']}"
+                                     actionListener="#{reportsBean.init}"
+                                     update="reports"
+                                     immediate="true">
+                        <p:resetInput target="reports"/>
+                    </p:commandButton>
+                    <p:commandButton id="dummy" style="display:none;"/>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

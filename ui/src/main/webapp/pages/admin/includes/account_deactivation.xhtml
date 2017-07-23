@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <!--POPUP DIALOG "Deactivate account"-->
+    <p:dialog id="deactivateAccountDialog" header="#{msgs['popup.title']}"
+              widgetVar="deactivateAccountDialog" showEffect="clip" hideEffect="fade"
+              modal="true" closable="false" resizable="false" width="450">
+
+        <h:form id="accountDeactivationForm">
+            <div class="dialog-text">
+                <p:outputLabel value="#{msgs['popup.accountQuestion']} "/>
+                <p:outputLabel class="italic" value="#{customerBean.accountForDeactivation.accountNumber}"/>
+                <p:outputLabel value=" ?"/>
+            </div>
+
+        <p:separator/>
+                <div class="commandButtons-1">
+                    <p:commandButton value="#{msgs['popup.yes']}" action="#{customerBean.deactivation}"
+                                     ajax="false" onclick="window.close()"/>
+                    <p:commandButton value="#{msgs['popup.cancel']}"
+                                     actionListener="#{customerBean.setAccountForDeactivation(null)}"
+                                     oncomplete="PF('deactivateAccountDialog').hide();"/>
+                </div>
+        </h:form>
+
+    </p:dialog>
+</ui:composition>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:body>
+    <ui:composition template="../default.xhtml">
+        <ui:define name="header">
+            <div class="header-elements">
+                <div class="header-text">
+                    <h2>
+                        <p:inputText
+                                value="#{customerMainBean.customer.firstName} #{customerMainBean.customer.lastName},"
+                                readonly="true"
+                                title="#{customerMainBean.customer.firstName} #{customerMainBean.customer.lastName}"
+                                styleClass="welcome-field"/>
+                        <br/>
+                        #{msgs['customer.header.welcome']}
+                    </h2>
+                </div>
+                <p:commandButton action="#{customerLoginBean.logout}" value="#{msgs['customer.header.exit']}" icon="fa fa-sign-out"/>
+            </div>
+
+            <ui:include src="includes/menu.xhtml"/>
+        </ui:define>
+
+
+        <ui:define name="content">
+            <br/>
+            <h2>#{msgs['customer.main.accounts']}</h2>
+            <p:dataTable id="customerMainAccountsTable" var="account" selectionMode="single"
+                         value="#{customerMainBean.accounts}" rowKey="#{account.accountNumber}">
+                <p:ajax event="rowSelect" listener="#{customerMainBean.onRowSelect}"/>
+
+                <p:column headerText="#{msgs['customer.main.account']}">
+                    <h:outputText value="#{account.accountNumber}"/>
+                </p:column>
+                <p:column headerText="#{msgs['customer.main.account.balance']}">
+                    <h:outputText value="#{account.balance}">
+                        <f:convertNumber type="currency" currencySymbol="" groupingUsed="false"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="#{msgs['customer.main.account.currency']}">
+                    <h:outputText value="#{account.currency}"/>
+                </p:column>
+                <p:column headerText="#{msgs['customer.main.account.type']}">
+                    <h:outputText value="#{account.type.name}"/>
+                </p:column>
+            </p:dataTable>
+
+            <br/>
+            <h2>#{msgs['customer.main.cards']}</h2>
+            <p:dataTable id="customerMainCardsTable" var="card" selectionMode="single"
+                         value="#{customerMainBean.cardList}" rowKey="#{card.cardNumber}">
+                <p:ajax event="rowSelect" listener="#{customerMainBean.onRowSelect}"/>
+
+                <p:column headerText="#{msgs['customer.main.card.pan']}">
+                    <h:outputText value="#{card.cardNumber}" converter="#{cardNumberConverter}"/>
+                </p:column>
+                <p:column headerText="#{msgs['customer.main.card.balance']}">
+                    <h:outputText value="#{card.account.balance}">
+                        <f:convertNumber type="currency" currencySymbol="" groupingUsed="false"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="#{msgs['customer.main.card.currency']}">
+                    <h:outputText value="#{card.account.currency}"/>
+                </p:column>
+                <p:column headerText="#{msgs['customer.main.card.type']}">
+                    <h:outputText value="#{card.cardType}"/>
+                </p:column>
+            </p:dataTable>
+
+            <br/>
+            <h2>#{msgs['customer.main.exchange']} #{customerMainBean.currentDate})</h2>
+            <p:dataTable var="exchangeRates" value="#{customerMainBean.exchangeRates}">
+                <p:column headerText="#{msgs['customer.main.exchange.currency']}">
+                    <h:outputText value="#{exchangeRates.currency}"/>
+                </p:column>
+                <p:column headerText="#{msgs['customer.main.exchange.quantity']}">
+                    <h:outputText value="#{exchangeRates.quantity}"/>
+                </p:column>
+                <p:column headerText="#{msgs['customer.main.exchange.purchase']}">
+                    <h:outputText value="#{exchangeRates.purchase}">
+                        <f:convertNumber minFractionDigits="4"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="#{msgs['customer.main.exchange.sell']}">
+                    <h:outputText value="#{exchangeRates.sell}">
+                        <f:convertNumber minFractionDigits="4"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="#{msgs['customer.main.exchange.nbu']}">
+                    <h:outputText value="#{exchangeRates.nbuRate}">
+                        <f:convertNumber minFractionDigits="4"/>
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+            <br/>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

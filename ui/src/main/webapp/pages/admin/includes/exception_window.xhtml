@@ -1,0 +1,29 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <p:ajaxExceptionHandler type="java.lang.IllegalArgumentException"
+                            update="exceptionDialog" onexception="PF('exceptionDialog').show();"/>
+
+    <p:ajaxExceptionHandler id="ORA-00001" type="org.springframework.dao.DataIntegrityViolationException"
+                            update="exceptionDialog" onexception="PF('exceptionDialog').show();"/>
+
+    <p:ajaxExceptionHandler type="javax.el.PropertyNotFoundException"
+                            update="exceptionDialog" onexception="PF('exceptionDialog').show();"/>
+
+    <p:ajaxExceptionHandler type="javax.faces.view.facelets.TagException"
+                            update="exceptionDialog" onexception="PF('exceptionDialog').show();"/>
+
+    <p:ajaxExceptionHandler type="org.springframework.transaction.TransactionSystemException"
+                            update="exceptionDialog" onexception="PF('exceptionDialog').show();"/>
+
+    <p:dialog id="exceptionDialog" header="Exception '#{pfExceptionHandler.type}' occured!"
+              widgetVar="exceptionDialog" modal="true" resizable="false"
+              width="650" height="150">
+        Message: #{pfExceptionHandler.message}
+    </p:dialog>
+
+</ui:composition>

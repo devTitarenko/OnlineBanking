@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:body>
+    <ui:composition template="../default.xhtml">
+
+        <ui:define name="header">
+            <div class="header-elements">
+                <div class="header-text">
+                    <h2>CARDS<br/>
+                        Your Paycards
+                    </h2>
+                </div>
+                <ui:include src="includes/header_buttons.xhtml"/>
+            </div>
+
+            <ui:include src="includes/menu.xhtml"/>
+        </ui:define>
+
+        <ui:define name="content">
+            <br/>
+            <h:form id="custCardsForm" styleClass="cForm">
+                <p:panelGrid id="custCardsPanel"
+                             style="width: 126%" styleClass="pGrid">
+                    <p:row>
+                        <p:column colspan="5">
+                            <p:commandButton value="#{msgs['customer.cards.details']}" immediate="true" styleClass="accButton"
+                                             disabled="#{!customerCardsBean.cardDetailButtonActivated}" update="cardDetailsForm"
+                                             onclick="PF('cardDetailsDialog').show();"/>
+                        </p:column>
+                        <p:column colspan="5">
+                            <p:commandButton value="Block" styleClass="accButton" action="#{customerCardsBean.blockCard}"
+                                             disabled="#{!customerCardsBean.blockedButtonActivated}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="5">
+                            <p:commandButton value="Refresh" styleClass="accButton"
+                                             action="#{customerCardsBean.refreshPage()}"
+                                             disabled="#{!customerCardsBean.refreshButtonActivated}"/>
+                        </p:column>
+                        <p:column colspan="5">
+                            <p:commandButton value="Un-block" styleClass="accButton"
+                                             action="#{customerCardsBean.unblockCard}"
+                                             disabled="#{!customerCardsBean.unblockButtonActivated}"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+                <p>
+                    <h:outputText
+                            value="Note: To apply this operation to your card, please highlight the corresponding line in the list"
+                            rendered="#{not empty customerCardsBean.filteredCardList}"
+                            styleClass="accNoteText"/>
+                </p>
+                <br/>
+                <h3>
+                    <h:outputText value="You have no cards yet"
+                                  rendered="#{empty customerCardsBean.filteredCardList}"/>
+                </h3>
+                <h3>
+                    <h:outputText value="#{msgs['customer.main.cards']}"
+                                  rendered="#{not empty customerCardsBean.filteredCardList}"/>
+                </h3>
+                <br/>
+                <p:panelGrid columns="2" style="margin-bottom:12px" cellpadding="5" styleClass="pGrid"
+                             rendered="#{not empty customerCardsBean.cardList}">
+                    <p:outputLabel for="cardStatus" value="#{msgs['customer.main.card.show']}" styleClass="crdstslb"/>
+                    <p:selectOneMenu id="cardStatus" label="#{msgs['customer.main.card.show']}"
+                                     value="#{customerCardsBean.selectedStatusName}">
+                        <p:ajax listener="#{customerCardsBean.getSelectedCardsList}" event="change"
+                                update="customerCardCardsTable"/>
+                        <f:selectItem itemLabel="#{msgs['customer.card.status.All']}" itemValue="All"/>
+                        <f:selectItem itemLabel="#{msgs['customer.card.status.Active']}" itemValue="Active"/>
+                        <f:selectItem itemLabel="#{msgs['customer.card.status.ActiveAndBlocked']}"
+                                      itemValue="ActiveAndBlocked"/>
+                        <f:selectItem itemLabel="#{msgs['customer.card.status.Inactive']}" itemValue="Inactive"/>
+                    </p:selectOneMenu>
+                </p:panelGrid>
+
+                <p:dataTable id="customerCardCardsTable" rendered="#{not empty customerCardsBean.cardList}"
+                             value="#{customerCardsBean.filteredCardList}" var="card" rowKey="#{card.cardNumber}"
+                             selectionMode="single" style="width: 100%">
+                    <p:ajax event="rowSelect" listener="#{customerCardsBean.onRowSelect}"
+                            update=":custCardsForm:custCardsPanel"/>
+                    <p:ajax event="rowUnselect" listener="#{customerCardsBean.onRowUnselect}"
+                            update=":custCardsForm:custCardsPanel"/>
+                    <p:column headerText="#{msgs['customer.cards.pan']}" sortBy="#{card.cardNumber}">
+                        <h:outputText value="#{card.cardNumber}" converter="#{cardNumberConverter}"/>
+                    </p:column>
+                    <p:column headerText="#{msgs['customer.cards.balance']}">
+                        <h:outputText value="#{card.account.balance}">
+                            <f:convertNumber type="currency" currencySymbol="" groupingUsed="false"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msgs['customer.cards.currency']}" sortBy="#{card.account.currency}">
+                        <h:outputText value="#{card.account.currency}"/>
+                    </p:column>
+                    <p:column headerText="#{msgs['customer.cards.cardholder']}" sortBy="#{card.cardHolder}">
+                        <h:outputText value="#{card.cardHolder}"/>
+                    </p:column>
+                    <p:column headerText="#{msgs['customer.cards.card.type']}" sortBy="#{card.cardType}">
+                        <h:outputText value="#{card.cardType}"/>
+                    </p:column>
+                    <p:column headerText="#{msgs['customer.cards.status']}">
+                        <h:outputText value="#{card.status}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+            <p:dialog id="cardDetailsDialog" header="#{msgs['customer.card.details.dialog']}"
+                      widgetVar="cardDetailsDialog" position="center center"
+                      modal="true" closable="false" resizable="false" width="650"
+                      onShow="PF('cardDetailsDialog').initPosition()">
+                <ui:include src="includes/card_details.xhtml"/>
+            </p:dialog>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

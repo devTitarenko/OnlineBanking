@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+
+    <changeSet author="Titarenko" id="05-EC-343-Create_schema">
+        <createTable tableName="Admin">
+            <column autoIncrement="true" name="ID" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pass" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Titarenko" id="06-EC-343-Create_schema">
+            <insert tableName = "Admin">
+                <column name="id" value="1"/>
+                <column name="login" value="admin"/>
+                <column name="pass" value="admin"/>
+            </insert>
+    </changeSet>
+
+</databaseChangeLog>

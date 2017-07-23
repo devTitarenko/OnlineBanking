@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <h:form id="transferConfirmationForm">
+
+        <div class="dialog-text">
+            #{msgs['money.transfer.dialog.message']}
+        </div>
+        <br/>
+        <div class="commandButtons-1">
+            <p:commandButton value="#{msgs['money.transfer.dialog.ok']}"
+                             oncomplete="PF('transferDialog').hide();"/>
+        </div>
+    </h:form>
+
+    <f:facet name="footer">
+        <h:outputText/>
+    </f:facet>
+</ui:composition>

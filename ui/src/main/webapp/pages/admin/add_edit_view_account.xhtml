@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:body>
+    <ui:composition template="../default.xhtml">
+        <ui:define name="content">
+            <h:form id="createEditViewAccountForm">
+                <p:defaultCommand target="dummy"/>
+                <h2>
+                    <c:if test="#{accountBean.mode eq 'VIEW'}">#{msgs['accountForm.view']}</c:if>
+                    <c:if test="#{accountBean.mode eq 'ADD'}">#{msgs['accountForm.add']}</c:if>
+                    <c:if test="#{accountBean.mode eq 'EDIT'}">#{msgs['accountForm.edit']}</c:if>
+                </h2>
+
+                <div class="container-A"
+                     style="width: 420px;">
+                    <div class="item">
+                        <p:outputLabel for="accountType"
+                                       value="#{msgs['accountForm.Type']}"/>
+                        <p:selectOneMenu id="accountType"
+                                         value="#{accountBean.accountDto.type}"
+                                         required="true"
+                                         requiredMessage="#{msgs['Error.accountType.mandatory']}"
+                                         disabled="#{!(accountBean.mode eq 'ADD')}"
+                                         binding="#{accType}">
+                            <f:ajax execute="@this"
+                                    event="change"
+                                    render="m_accountType"/>
+                            <f:selectItem/>
+                            <f:selectItems value="#{accountBean.accountTypes}"
+                                           var="accountType"
+                                           itemValue="#{accountType}"
+                                           itemLabel="#{accountType.name}"/>
+                            <p:ajax event="change"
+                                    listener="#{accountBean.accountTypeChangeListener}"
+                                    update="accountNumber loan"/>
+                        </p:selectOneMenu>
+                        <p:message id="m_accountType"
+                                   for="accountType"
+                                   display="text"/>
+                    </div>
+
+                    <div class="item">
+                        <p:outputLabel for="accountNumber"
+                                       value="#{msgs['accountForm.Number']}"/>
+                        <p:inputText id="accountNumber"
+                                     value="#{accountBean.accountDto.accountNumber}"
+                                     disabled="true"/>
+                        <p:message for="accountNumber"
+                                   display="text"/>
+                    </div>
+
+                    <div class="item">
+                        <p:outputLabel for="accountValidFrom"
+                                       value="#{msgs['accountForm.ValidFrom']}"/>
+                        <p:calendar id="accountValidFrom"
+                                    widgetVar="accountValidFromVar"
+                                    value="#{accountBean.accountDto.validFrom}"
+                                    disabled="#{!(accountBean.mode eq 'ADD')}"
+                                    pattern="MM/dd/yyyy"
+                                    showOn="button"
+                                    navigator="true"
+                                    yearRange="-0:+30"
+                                    required="true"
+                                    requiredMessage="#{msgs['Error.validFrom.mandatory']}"
+                                    converterMessage="#{msgs['Error.dateIssue.wrongFormat']}"
+                                    binding="#{validFrom}">
+                            <p:ajax event="dateSelect"
+                                    update="accountValidTo"/>
+                            <p:ajax event="dateSelect"
+                                    render="m_accountValidFrom"/>
+                            <p:ajax event="keyup"
+                                    oncomplete="hideAccountCalendarErrMsg('accountValidFrom', 'accountValidFromVar')"/>
+                            <f:validator binding="#{dateFormatValidator}"/>
+                            <f:validator binding="#{validFromValidator}"/>
+                        </p:calendar>
+                        <p:message id="m_accountValidFrom"
+                                   for="accountValidFrom"
+                                   display="text"/>
+                    </div>
+
+                    <div class="item">
+                        <p:outputLabel for="accountValidTo"
+                                       value="#{msgs['accountForm.ValidTo']}"/>
+                        <p:calendar id="accountValidTo"
+                                    widgetVar="accountValidToVar"
+                                    value="#{accountBean.accountDto.validTo}"
+                                    disabled="#{accountBean.mode eq 'VIEW'}"
+                                    pattern="MM/dd/yyyy"
+                                    showOn="button"
+                                    navigator="true"
+                                    yearRange="-0:+30"
+                                    required="true"
+                                    requiredMessage="#{msgs['Error.validTo.mandatory']}"
+                                    converterMessage="#{msgs['Error.dateIssue.wrongFormat']}">
+                            <p:ajax event="dateSelect"
+                                    render="m_accountValidTo"/>
+                            <p:ajax event="keyup"
+                                    oncomplete="hideAccountCalendarErrMsg('accountValidTo', 'accountValidToVar')"/>
+                            <f:validator binding="#{dateFormatValidator}"/>
+                            <f:validator binding="#{validToValidator}"/>
+                            <f:attribute name="validFrom"
+                                         value="#{validFrom}"/>
+                        </p:calendar>
+                        <p:message id="m_accountValidTo"
+                                   for="accountValidTo"
+                                   display="text"/>
+                    </div>
+
+                    <div class="item">
+                        <p:outputLabel for="accountCurrency"
+                                       value="#{msgs['accountForm.Currency']}"/>
+                        <p:selectOneMenu id="accountCurrency"
+                                         value="#{accountBean.accountDto.currency}"
+                                         required="true"
+                                         disabled="#{!(accountBean.mode eq 'ADD')}">
+                            <f:selectItems value="#{accountBean.accountCurrency}"
+                                           var="accountCurrency"
+                                           itemValue="#{accountCurrency}"
+                                           itemLabel="#{accountCurrency.name}"/>
+                            <f:ajax execute="@this"
+                                    event="keyup"
+                                    render="m_curr"/>
+                        </p:selectOneMenu>
+                        <p:message id="m_curr"
+                                   for="accountCurrency"
+                                   display="text"/>
+                    </div>
+
+                    <div class="item">
+                        <p:outputLabel for="accountBalance"
+                                       value="#{msgs['accountForm.Balance']}"/>
+                        <p:inputText id="accountBalance"
+                                     value="#{accountBean.accountDto.balance}"
+                                     required="true"
+                                     requiredMessage="#{msgs['Error.accountBalance.mandatory']}"
+                                     disabled="#{accountBean.mode eq 'VIEW'}"
+                                     converter="lenientDoubleConverter"
+                                     converterMessage="#{msgs['Error.accountBalance.monetary']}"
+                                     validatorMessage="#{msgs['Error.accountBalance.monetary']}">
+                            <p:ajax event="keyup"
+                                    oncomplete="hideAccountErrMsg('accountBalance')"/>
+                            <f:validator validatorId="doubleValidator"/>
+                            <f:attribute name="accType"
+                                         value="#{accType}"/>
+                            <f:attribute name="accLimit"
+                                         value="#{accLimit}"/>
+                        </p:inputText>
+                        <p:message id="m_accountBalance"
+                                   for="accountBalance"
+                                   display="text"/>
+                    </div>
+
+                    <h:panelGroup id="loan">
+                        <div class="item">
+                            <p:outputLabel for="accountLimit"
+                                           value="#{msgs['accountForm.Limit']}"
+                                           rendered="#{accountBean.limitVisible || accountBean.accountDto.type eq 'LOAN'}"/>
+                            <p:inputText id="accountLimit"
+                                         value="#{accountBean.accountDto.limit}"
+                                         binding="#{accLimit}"
+                                         rendered="#{accountBean.limitVisible || accountBean.account.type eq 'LOAN'}"
+                                         required="true"
+                                         requiredMessage="#{msgs['Error.accountLimit.mandatory']}"
+                                         disabled="#{accountBean.mode eq 'VIEW'}"
+                                         converter="lenientDoubleConverter"
+                                         converterMessage="#{msgs['Error.accountLimit.monetary']}">
+                                <p:ajax event="keyup"
+                                        oncomplete="hideAccountErrMsg('accountLimit')"/>
+                                <f:validator validatorId="doubleValidator"/>
+                                <f:validateDoubleRange minimum="0"/>
+                            </p:inputText>
+                            <p:message id="m_accountLimit"
+                                       for="accountLimit"
+                                       display="text"/>
+                        </div>
+                    </h:panelGroup>
+                </div>
+                <br/>
+                <br/>
+                <h:panelGroup id="addOrEdit">
+                    <div class="commandButtons-1">
+                        <p:commandButton value="#{msgs['customerForm.save']}"
+                                         icon="ui-icon-check"
+                                         update="createEditViewAccountForm"
+                                         action="#{accountBean.preSaveAccount}"
+                                         rendered="#{!(accountBean.mode.name() eq 'VIEW')}"/>
+                        <p:commandButton value="#{msgs['customerForm.cancel']}"
+                                         immediate="true"
+                                         action="#{accountBean.backToCustomerForm}"
+                                         rendered="#{!(accountBean.mode.name() eq 'VIEW')}"/>
+                        <p:commandButton value="#{msgs['customerForm.back']}"
+                                         immediate="true"
+                                         action="#{accountBean.backToCustomerForm}"
+                                         rendered="#{accountBean.mode.name() eq 'VIEW'}"/>
+                        <p:commandButton id="dummy"
+                                         process="@none"
+                                         global="false"
+                                         style="display:none;"/>
+                    </div>
+                </h:panelGroup>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

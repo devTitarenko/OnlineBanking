@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+              version="2.0">
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+        </locale-config>
+
+        <el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+        <el-resolver>org.primefaces.application.exceptionhandler.PrimeExceptionHandlerELResolver</el-resolver>
+
+        <resource-bundle>
+            <base-name>messages.messages_en</base-name>
+            <var>msgs</var>
+        </resource-bundle>
+    </application>
+
+    <navigation-rule>
+        <from-view-id>/pages/*</from-view-id>
+        <navigation-case>
+            <from-outcome>GoToReports</from-outcome>
+            <to-view-id>/pages/admin/reports_screen.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>GoToHtmlReports</from-outcome>
+            <to-view-id>/pages/admin/reports_html.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>SearchCustomer</from-outcome>
+            <to-view-id>/pages/admin/search_customer.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>AddEditCustomer</from-outcome>
+            <to-view-id>/pages/admin/add_edit_customer.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>AddAccount</from-outcome>
+            <to-view-id>/pages/admin/add_edit_view_account.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>AddCard</from-outcome>
+            <to-view-id>/pages/admin/add_edit_view_card.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+
+        <navigation-case>
+            <from-outcome>AdminApp</from-outcome>
+            <to-view-id>/pages/login_admin.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>ChangePassword</from-outcome>
+            <to-view-id>/pages/customer/change_password.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>Exit</from-outcome>
+            <to-view-id>/pages/login_customer.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>Main</from-outcome>
+            <to-view-id>/pages/customer/main.xhtml</to-view-id>
+            <redirect>
+                <view-param>
+                    <name>i</name>
+                    <value>-1</value>
+                </view-param>
+            </redirect>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>Accounts</from-outcome>
+            <to-view-id>/pages/customer/accounts.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>Cards</from-outcome>
+            <to-view-id>/pages/customer/cards.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+
+    <factory>
+        <exception-handler-factory>
+            org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory
+        </exception-handler-factory>
+    </factory>
+</faces-config>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+
+    <changeSet author="Titarenko" id="01-EC-509-Modify_Card" failOnError="true">
+        <comment>EC-509 Add blockedStatus column to Card table</comment>
+        <addColumn tableName="Card">
+            <column name="isBlocked" type="NUMBER(1)" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="Card" columnName="isBlocked"/>
+        </rollback>
+
+    </changeSet>
+</databaseChangeLog>

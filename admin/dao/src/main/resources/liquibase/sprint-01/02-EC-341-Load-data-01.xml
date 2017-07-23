@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+
+    <changeSet id="05-EC-341-Country-load-data" author="Titarenko" failOnError="true">
+        <comment>EC-341 Create Domain model + Liquibase scripts, load data to table Country</comment>
+        <loadData encoding="UTF-8"
+                  file="data/country.csv"
+                  separator=";"
+                  tableName="country"
+                  relativeToChangelogFile="true">
+            <column name="ID" type="NUMERIC"/>
+            <column name="COUNTRY" type="STRING"/>
+        </loadData>
+
+        <rollback>
+            <sql>DELETE FROM countries</sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

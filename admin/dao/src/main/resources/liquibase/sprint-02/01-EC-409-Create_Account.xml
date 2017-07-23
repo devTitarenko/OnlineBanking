@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+
+    <changeSet author="Titarenko" id="08-EC-409-Create-Account-table" failOnError="true">
+        <comment>EC-409 Create Account table</comment>
+
+        <createTable tableName="Account">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR2(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="accountNumber" type="VARCHAR2(14)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="account_number_unique"/>
+            </column>
+            <column name="validFrom" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="validTo" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="VARCHAR2(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="NUMBER(*,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="limit" type="NUMBER(*,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FK_Customer_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_account_customer" references="Customer(id)"
+                             deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="ClBank-admin-dao" />
+        <module name="ClBank-admin-service" />
+        <module name="ClBank-ui" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ClBank-admin" target="1.8" />
+      <module name="ClBank-admin-dao" target="1.8" />
+      <module name="ClBank-admin-service" target="1.8" />
+      <module name="ClBank-ui" target="1.8" />
+      <module name="EIS_OnlineBanking" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:body>
+    <ui:composition template="../default.xhtml">
+        <ui:define name="content">
+            <h:form id="search">
+                <p:defaultCommand target="dummy"/>
+
+                <div class="box2" style="width: 165px">
+                    <p:commandButton value="#{msgs['customerSearchForm.reports']}"
+                                     immediate="true"
+                                     action="#{adminBean.goToReports}"/>
+
+                    <p:commandButton action="#{customerLoginBean.logout()}" immediate="true"
+                                     value="#{msgs['customerSearchForm.exit']}" icon="fa fa-sign-out"/>
+
+                </div>
+                <h2>#{msgs['customerSearchForm.title']}</h2>
+
+                <div class="container-A"
+                     style="width: 350px;">
+                    <div class="item">
+                        <p:outputLabel for="firstName"
+                                       value="First Name"/>
+                        <p:inputText id="firstName"
+                                     value="#{customerSearchBean.searchCriteria.firstNameCriteria}"
+                                     validatorMessage="#{msgs['Error.firstName.wrongFormat']}">
+                            <p:ajax event="keyup"
+                                    oncomplete="hideSearchErrMsg('firstName')"/>
+                            <f:validateRegex pattern="^([a-zA-Z]+[a-zA-Z\s\-]*){1,255}$"/>
+                        </p:inputText>
+                        <p:message id="m_firstName"
+                                   for="firstName"
+                                   display="text"/>
+                    </div>
+                    <div class="item">
+                        <p:outputLabel for="lastName"
+                                       value="Last Name"/>
+                        <p:inputText id="lastName"
+                                     value="#{customerSearchBean.searchCriteria.lastNameCriteria}"
+                                     validatorMessage="#{msgs['Error.lastName.wrongFormat']}">
+                            <p:ajax event="keyup"
+                                    oncomplete="hideSearchErrMsg('lastName')"/>
+                            <f:validateRegex pattern="^([a-zA-Z]+[a-zA-Z\s\-]*){1,255}$"/>
+                        </p:inputText>
+                        <p:message id="m_lastName"
+                                   for="lastName"
+                                   display="text"/>
+                    </div>
+                    <div class="item">
+                        <p:outputLabel for="mobile"
+                                       value="Mobile"/>
+                        <p:inputText id="mobile"
+                                     value="#{customerSearchBean.searchCriteria.mobileNumCriteria}"
+                                     validatorMessage="#{msgs['Error.phone.wrongFormat']}">
+                            <p:ajax event="keyup"
+                                    oncomplete="hideSearchErrMsg('mobile')"/>
+                            <f:validateRegex pattern="^[\d]{1,12}$"/>
+                        </p:inputText>
+                        <p:message id="m_mobile"
+                                   for="mobile"
+                                   display="text"/>
+                    </div>
+                    <div class="item">
+                        <p:outputLabel for="accountNumber"
+                                       value="Account Number"/>
+                        <p:inputText id="accountNumber"
+                                     value="#{customerSearchBean.accountNumber}"
+                                     validatorMessage="#{msgs['Error.account.number.wrongFormat']}">
+                            <p:ajax event="keyup"
+                                    oncomplete="hideSearchErrMsg('accountNumber')"/>
+                            <f:validateRegex pattern="^[\d]{1,14}$"/>
+                        </p:inputText>
+                        <p:message id="m_accountNumber"
+                                   for="accountNumber"
+                                   display="text"/>
+                    </div>
+
+                    <div class="item">
+                        <p:outputLabel for="accountValidFrom" value="Account Valid From"/>
+                        <p:calendar id="accountValidFrom" widgetVar="accountValidFromVar"
+                                    value="#{customerSearchBean.searchCriteria.accountValidFrom}"
+                                    showOn="button"
+                                    navigator="true"
+                                    pattern="MM/dd/yyyy"
+                                    yearRange="-10:+35"
+                                    validatorMessage="#{msgs['Error.dateIssue.wrongFormat']}"
+                                    converterMessage="#{msgs['Error.dateIssue.wrongFormat']}">
+                            <p:ajax event="dateSelect" render="m_accountValidFrom"/>
+                            <p:ajax event="keyup"
+                                    oncomplete="hideSearchCalendarErrMsg('accountValidFrom', 'accountValidFromVar')"/>
+                        </p:calendar>
+                        <p:message id="m_accountValidFrom" for="accountValidFrom" display="text"/>
+                    </div>
+
+                    <div class="item">
+                        <p:outputLabel for="accountValidTo" value="Account Valid To"/>
+                        <p:calendar id="accountValidTo" widgetVar="accountValidToVar"
+                                    value="#{customerSearchBean.searchCriteria.accountValidTo}"
+                                    showOn="button"
+                                    navigator="true"
+                                    pattern="MM/dd/yyyy"
+                                    yearRange="-10:+35"
+                                    validatorMessage="#{msgs['Error.effectiveDate.wrongFormat']}"
+                                    converterMessage="#{msgs['Error.dateIssue.wrongFormat']}">
+                            <p:ajax event="dateSelect" render="m_accountValidTo"/>
+                            <p:ajax event="keyup"
+                                    oncomplete="hideSearchCalendarErrMsg('accountValidTo', 'accountValidToVar')"/>
+                        </p:calendar>
+                        <p:message id="m_accountValidTo" for="accountValidTo" display="text"/>
+                    </div>
+                </div>
+
+                <div class="box1">
+                    <div class="box1"
+                         style="width: 300px">
+                        <p:commandButton value="Search"
+                                         actionListener="#{customerSearchBean.search}"
+                                         onclick="searchFormSpaceTrimmer()"
+                                         update="search, result, message">
+                        </p:commandButton>
+                        <p:commandButton value="Clear"
+                                         actionListener="#{customerSearchBean.init}"
+                                         update="search, result, message"
+                                         immediate="true">
+                            <p:resetInput target="search"/>
+                        </p:commandButton>
+                        <p:commandButton id="dummy" style="display:none;"/>
+                    </div>
+                    <p:commandButton value="#{msgs['customerSearchForm.addEdit']}"
+                                     immediate="true" action="AddEditCustomer"/>
+                </div>
+
+                <h2 style="margin-top:0"/>
+                <p:dataTable id="result" var="customer"
+                             value="#{customerSearchBean.customers}"
+                             rendered="#{customerSearchBean.visible}"
+                             sortBy="#{customer.lastName}"
+                             scrollable="true" scrollHeight="27%">
+                    <p:column headerText="First name" styleClass="column30">
+                        <h:outputText id="name" value="#{customer.firstName}"/>
+                        <p:tooltip for="name" value="#{customer.firstName}" trackMouse="true"/>
+                    </p:column>
+                    <p:column headerText="Last name" styleClass="column30">
+                        <h:outputText id="last" value="#{customer.lastName}"/>
+                        <p:tooltip for="last" value="#{customer.lastName}" trackMouse="true"/>
+                    </p:column>
+                    <p:column headerText="Mobile" styleClass="column20">
+                        <h:outputText value="#{customer.mobileNum}"/>
+                    </p:column>
+                    <p:column headerText="Status" styleClass="column10">
+                        <h:outputText value="#{customer.status.name}"/>
+                    </p:column>
+                    <p:column headerText="Action" styleClass="column10">
+                        <p:link value="Edit" outcome="AddEditCustomer">
+                            <f:param name="customerId" value="#{customer.id}"/>
+                        </p:link>
+                    </p:column>
+                </p:dataTable>
+
+                <div class="message">
+                    <h:outputText id="message"
+                                  value="#{customerSearchBean.showMessage}"
+                                  styleClass="ui-message-error"
+                                  style="font-weight: bold;"/>
+                </div>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

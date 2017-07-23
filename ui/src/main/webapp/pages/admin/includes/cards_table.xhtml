@@ -1,0 +1,53 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dataTable var="card" value="#{customerBean.cards}"
+                     rendered="#{!customerBean.cards.isEmpty()}">
+
+        <p:column headerText="#{msgs['customerForm.cardTable.card_pan']}" sortBy="#{card.cardNumber}">
+            <h:outputText value="#{card.cardNumber}"/>
+        </p:column>
+
+        <p:column headerText="#{msgs['customerForm.cardTable.type']}">
+            <h:outputText value="#{card.cardType}"/>
+        </p:column>
+
+        <p:column headerText="#{msgs['customerForm.cardTable.holder']}">
+            <h:outputText value="#{card.cardHolder}"/>
+        </p:column>
+
+        <p:column headerText="#{msgs['customerForm.cardTable.currency']}">
+            <h:outputText value="#{card.account.currency}"/>
+        </p:column>
+
+        <p:column headerText="#{msgs['customerForm.cardTable.balance']}">
+            <h:outputText value="#{card.account.balance}">
+                <f:convertNumber type="currency" currencySymbol="" groupingUsed="false"/>
+            </h:outputText>
+        </p:column>
+
+        <p:column headerText="#{msgs['customerForm.cardTable.status']}">
+            <h:outputText value="#{card.status.name}"/>
+        </p:column>
+
+        <p:column headerText="Actions" styleClass="column15">
+            <p:commandLink value="#{msgs['customerForm.view']}" immediate="true"
+                           action="#{customerBean.viewCard(card)}"/>
+            <p:spacer width="10"/>
+            <p:commandLink value="#{msgs['customerForm.edit']}" immediate="true"
+                           action="#{customerBean.editCard(card)}"
+                           disabled="#{card.status eq 'INACTIVE'}"/>
+            <p:spacer width="10"/>
+
+            <p:commandLink value="#{msgs['customerForm.deactivate']}" immediate="true"
+                           actionListener="#{customerBean.setCardForDeactivation(card)}"
+                           update="cardDeactivationForm"
+                           onclick="PF('deactivateCardDialog').show();"
+                           disabled="#{card.status eq 'INACTIVE'}"/>
+
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

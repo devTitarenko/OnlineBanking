@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:body>
+    <ui:composition template="../default.xhtml">
+
+        <ui:define name="header">
+
+            <div class="header-elements">
+                <div class="header-text">
+                    <h2>MONEY TRANSFER<br/>
+                    </h2>
+                </div>
+                <ui:include src="includes/header_buttons.xhtml"/>
+            </div>
+
+            <ui:include src="includes/menu.xhtml"/>
+        </ui:define>
+
+
+        <ui:define name="content">
+            <br/>
+            <h:form id="transfer" styleClass="mtf">
+                <h:outputText value="#{msgs['money.transfer.no.active.accounts']}"
+                              rendered="#{!moneyTransferBean.hasAccountOrCard}" escape="false"
+                styleClass="mtf-msg"/>
+                <p:panelGrid columns="1" id="tranferFromTo" styleClass="pGrid"
+                             rendered="#{moneyTransferBean.hasAccountOrCard}">
+                    <h:outputText value="#{msgs['money.transfer.first.panel.header']}" />
+                    <p:selectOneMenu id="transferFrom" value="#{moneyTransferBean.transferFrom}"
+                                     required="true" requiredMessage="#{msgs['money.transfer.transfer.from.required']}"
+                                     binding="#{transferFrom}" converter="paymentMethodConverter"
+                                     converterMessage="error">
+                        <!--<p:ajax listener="#{moneyTransferBean.mapStringToCardOrAccountFrom}" event="change"-->
+                        <!--update="transferFrom"/>-->
+                        <f:selectItem itemLabel="" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{moneyTransferBean.listForDropDown}"/>
+                        <!--<f:selectItems value="#{moneyTransferBean.accountsForDropDown}"/>-->
+                    </p:selectOneMenu>
+                    <p:message id="m_transferFrom" for="transferFrom" display="text"/>
+
+                    <h:outputText id="transferToLabel" value="#{msgs['money.transfer.second.panel.header']}"
+                                  styleClass="#{moneyTransferBean.transferWithinBank=='true'?'disabled-outputLabel':null}"/>
+
+
+                    <p:selectOneMenu id="transferTo" value="#{moneyTransferBean.transferTo}"
+                                     disabled="#{moneyTransferBean.transferWithinBank=='true'}"
+                                     required="#{moneyTransferBean.transferWithinBank=='false'}"
+                                     requiredMessage="#{msgs['money.transfer.transfer.to.required']}"
+                                     converter="paymentMethodConverter" converterMessage="error"
+                                     validator="#{moneyTransferBean.validateAccounts}">
+                        <f:attribute value="#{transferFrom}" name="transferFrom"/>
+                        <!-- <p:ajax listener="#{moneyTransferBean.mapStringToCardOrAccountTo}" event="change"
+                                 update="transferTo"/>-->
+                        <f:selectItem itemLabel="" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{moneyTransferBean.listForDropDown}"/>
+                        <!--<f:selectItems value="#{moneyTransferBean.accountsForDropDown}"/>-->
+                    </p:selectOneMenu>
+                    <p:message id="m_transferTo" for="transferTo" display="text"/>
+                </p:panelGrid>
+
+                <p:selectBooleanCheckbox id="box" value="#{moneyTransferBean.transferWithinBank}"
+                                         rendered="#{moneyTransferBean.hasAccountOrCard}">
+                    <p:ajax event="change" process="box" update="cardNumber transferTo transferToLabel cardNumberLabel"/>
+                </p:selectBooleanCheckbox>
+                <h:outputText value="#{msgs['money.transfer.checkbox.label']}" style="margin-left: 5px;"
+                              rendered="#{moneyTransferBean.hasAccountOrCard}"/>
+                <br/>
+
+                <p:panelGrid id="transferWithinBank" columns="1" styleClass="pGrid"
+                             rendered="#{moneyTransferBean.hasAccountOrCard}">
+                    <h:outputLabel id="cardNumberLabel" value="#{msgs['money.transfer.card.number']}" for="cardNumber"
+                                   styleClass="#{moneyTransferBean.transferWithinBank=='false'?'disabled-outputLabel':null}"/>
+                    <p:inputText id="cardNumber" value="#{moneyTransferBean.inputtedCardNumber}"
+                                 required="#{moneyTransferBean.transferWithinBank}"
+                                 requiredMessage="#{msgs['money.transfer.card.number.empty']}"
+                                 disabled="#{moneyTransferBean.transferWithinBank=='false'}"
+                                 validator="#{moneyTransferBean.validateOtherCard}">
+                        <f:attribute value="#{transferFrom}" name="transferFrom"/>
+                    </p:inputText>
+                    <p:message id="m_cardNumber" for="cardNumber" display="text"/>
+                    <p:outputLabel value="#{msgs['money.transfer.transfer.amount']}"/>
+                    <p:inputText id="amount" value="#{moneyTransferBean.amount}" required="true"
+                                 requiredMessage="#{msgs['money.transfer.transfer.amount.required']}"
+                                 validator="#{moneyTransferBean.validateAmount}">
+                        <f:attribute value="#{transferFrom}" name="transferFrom"/>
+                    </p:inputText>
+                    <p:message id="m_amount" for="amount" display="text"/>
+                </p:panelGrid>
+
+                <p:commandButton value="#{msgs['money.transfer.transfer.button']}"
+                                 action="#{moneyTransferBean.transferMoney}"
+                                 update="transfer" styleClass="mtf-butt"
+                                 rendered="#{moneyTransferBean.hasAccountOrCard}"/>
+                <p:commandButton value="#{msgs['money.transfer.clear.button']}" action="#{moneyTransferBean.init}"
+                                 update="transfer tranferFromTo transferWithinBank" process="@this"
+                                 styleClass="mtf-butt"
+                                 rendered="#{moneyTransferBean.hasAccountOrCard}">
+                    <p:resetInput target="transfer"/>
+                </p:commandButton>
+                <p:messages id="messages" showDetail="true" autoUpdate="true" globalOnly="true"/>
+            </h:form>
+
+            <p:dialog id="transferDialog" header="#{msgs['money.transfer.dialog.title']}"
+                      widgetVar="transferDialog" position="center center"
+                      modal="true" closable="false" resizable="false" width="500"
+                      onShow="PF('transferDialog').initPosition()">
+                <ui:include src="includes/transfer_confirmation.xhtml"/>
+            </p:dialog>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

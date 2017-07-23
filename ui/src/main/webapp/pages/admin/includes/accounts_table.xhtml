@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <p:dataTable var="account" value="#{customerBean.customer.accountList}"
+                 rendered="#{!customerBean.customer.accountList.isEmpty()}">
+
+        <p:column headerText="Number" sortBy="#{account.accountNumber}">
+            <h:outputText value="#{account.accountNumber}"/>
+        </p:column>
+
+        <p:column headerText="Type">
+            <h:outputText value="#{account.type.name}"/>
+        </p:column>
+
+        <p:column headerText="Currency">
+            <h:outputText value="#{account.currency.name}"/>
+        </p:column>
+
+        <p:column headerText="Balance">
+            <h:outputText value="#{account.balance}">
+                <f:convertNumber type="currency" currencySymbol="" groupingUsed="false"/>
+            </h:outputText>
+
+        </p:column>
+
+        <p:column headerText="Status">
+            <h:outputText value="#{account.status.name}"/>
+        </p:column>
+
+        <p:column headerText="Actions">
+            <p:commandLink value="#{msgs['customerForm.view']}" immediate="true"
+                           action="#{customerBean.viewAccount(account)}"/>
+            <p:spacer width="10"/>
+            <p:commandLink value="#{msgs['customerForm.edit']}" immediate="true"
+                           action="#{customerBean.editAccount(account)}"
+                           disabled="#{account.status eq 'INACTIVE'}"/>
+            <p:spacer width="10"/>
+            <p:commandLink value="#{msgs['customerForm.deactivate']}" immediate="true"
+                           actionListener="#{customerBean.setAccountForDeactivation(account)}"
+                           update="accountDeactivationForm"
+                           onclick="PF('deactivateAccountDialog').show();"
+                           disabled="#{account.status eq 'INACTIVE'}"/>
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

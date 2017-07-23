@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+
+    <changeSet author="Titarenko" id="01-EC-722-Create_Transactions" failOnError="true">
+        <comment>EC-722 Create Money Transfer Table</comment>
+        <createTable tableName="TransferRecord">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="transactionDateAndTime" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transactionType" type="VARCHAR2(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transactionSubtype" type="VARCHAR2(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creditAccountNumber" type="VARCHAR2(14)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="debitAccountNumber" type="VARCHAR2(14)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transactionAmount" type="NUMBER(*,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transactionCurrency" type="VARCHAR2(8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transactionLocation" type="VARCHAR2(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="performerId" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="startingBalance" type="NUMBER(*,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="endingBalance" type="NUMBER(*,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cardFromNumber" type="VARCHAR2(16)"/>
+            <column name="cardToNumber" type="VARCHAR2(16)"/>
+            <column name="entryType" type="VARCHAR2(64)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="TransferRecord" />
+        </rollback>
+
+    </changeSet>
+</databaseChangeLog>

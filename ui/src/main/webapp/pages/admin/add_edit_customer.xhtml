@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+    <ui:composition template="../default.xhtml">
+        <ui:define name="content">
+            <f:metadata>
+                <f:viewParam name="customerId"
+                             value="#{customerBean.customerId}"/>
+                <f:viewAction action="#{customerBean.updateCustomerById}"/>
+            </f:metadata>
+
+
+            <h:form id="createEditCustomerForm"
+                    class="accordion">
+                <p:defaultCommand target="dummy"/>
+
+                <h2>#{customerBean.mode eq 'ADD' ?
+                        msgs['customerForm.addCustomer'] : msgs['customerForm.editCustomer']}</h2>
+
+                <p:accordionPanel id="accordion"
+                                  multiple="true"
+                                  activeIndex="#{customerBean.activeAccordionTab}">
+                    <p:ajax event="tabChange"
+                            listener="#{customerBean.onTabChange}"/>
+                    <p:tab id="tab_1"
+                           title="#{msgs['customerForm.generalInformation']}">
+                        <div class="container-A">
+                            <div>
+                                <div class="item">
+                                    <p:outputLabel id="l_firstName"
+                                                   for="firstName"
+                                                   value="#{msgs['customerForm.firstName']}"/>
+                                    <p:inputText id="firstName"
+                                                 value="#{customerBean.customer.firstName}"
+                                                 requiredMessage="#{msgs['Error.firstName.mandatory']}"
+                                                 required="true"
+                                                 validatorMessage="#{msgs['Error.firstName.wrongFormat']}">
+                                        <p:ajax event="keyup"
+                                                oncomplete="hideCustomerErrMsg('firstName')"/>
+                                        <f:validateRegex pattern="^([a-zA-Z]+[a-zA-Z\s\-]*)?$"/>
+                                    </p:inputText>
+                                    <p:message id="m_firstName"
+                                               for="firstName"
+                                               display="text"/>
+                                </div>
+
+                                <div class="item">
+                                    <p:outputLabel id="l_lastName"
+                                                   for="lastName"
+                                                   value="#{msgs['customerForm.lastName']}"/>
+                                    <p:inputText id="lastName"
+                                                 value="#{customerBean.customer.lastName}"
+                                                 requiredMessage="#{msgs['Error.lastName.mandatory']}"
+                                                 required="true"
+                                                 validatorMessage="#{msgs['Error.lastName.wrongFormat']}">
+                                        <p:ajax event="change"
+                                                listener="#{customerBean.lastNameChangeListener}"
+                                                update="codeword"
+                                                immediate="true"/>
+                                        <p:ajax event="keyup"
+                                                oncomplete="hideCustomerErrMsg('lastName')"/>
+                                        <f:validateRegex pattern="^([a-zA-Z]+[a-zA-Z\s\-]*){1,255}$"/>
+                                    </p:inputText><p:message id="m_lastName"
+                                                             for="lastName"
+                                                             display="text"/>
+                                </div>
+
+                                <div class="item">
+                                    <p:outputLabel id="l_dateBirth"
+                                                   for="dateBirth"
+                                                   value="#{msgs['customerForm.dateBirth']}"/>
+                                    <p:calendar id="dateBirth"
+                                                widgetVar="dateBirthVar"
+                                                value="#{customerBean.customer.dateOfBirth}"
+                                                showOn="button"
+                                                navigator="true"
+                                                pattern="MM/dd/yyyy"
+                                                yearRange="-120:+0"
+                                                mindate="#{dateBean.minDate}"
+                                                maxdate="#{dateBean.maxDateOfBirth}"
+                                                required="true"
+                                                requiredMessage="#{msgs['Error.dateBirth.mandatory']}"
+                                                converterMessage="#{msgs['Error.dateIssue.wrongFormat']}"
+                                                disabled="#{customerBean.mode eq 'EDIT'}">
+                                        <p:ajax event="dateSelect" update="m_dateBirth"/>
+                                        <p:ajax event="keyup"
+                                                oncomplete="hideCustomerCalendarErrMsg('dateBirth', 'dateBirthVar')"/>
+                                        <f:validator binding="#{dateOfBirthValidator}"/>
+                                    </p:calendar>
+                                    <p:message id="m_dateBirth" for="dateBirth" display="text"/>
+                                </div>
+
+                                <div class="item">
+                                    <p:outputLabel id="l_gender"
+                                                   for="gender"
+                                                   value="#{msgs['customerForm.gender']}"/>
+                                    <p:selectOneMenu id="gender"
+                                                     value="#{customerBean.customer.gender}"
+                                                     required="true"
+                                                     requiredMessage="#{msgs['Error.gender.mandatory']}"
+                                                     disabled="#{customerBean.mode eq 'EDIT'}">
+                                        <p:ajax event="valueChange"
+                                                update="m_gender"/>
+                                        <f:selectItem/>
+                                        <f:selectItems value="#{customerBean.genders}"
+                                                       var="gender"
+                                                       itemValue="#{gender}"
+                                                       itemLabel="#{msgs['gender.'.concat(gender)]}"/>
+                                    </p:selectOneMenu><p:message id="m_gender"
+                                                                 for="gender"
+                                                                 display="text"/>
+                                </div>
+
+                                <div class="item">
+                                    <p:outputLabel id="l_merry"
+                                                   for="marry"
+                                                   value="#{msgs['customerForm.maritalStatus']}"/>
+                                    <p:selectOneMenu id="marry"
+                                                     value="#{customerBean.customer.maritalStatus}">
+                                        <f:selectItem/>
+                                        <f:selectItems value="#{customerBean.maritalStatuses}"
+                                                       var="maritalStatus"
+                                                       itemValue="#{maritalStatus}"
+                                                       itemLabel="#{msgs['maritalStatus.'.concat(maritalStatus)]}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="item">
+                                    <p:outputLabel id="l_tin"
+                                                   for="tin"
+                                                   value="#{msgs['customerForm.tin']}"/>
+                                    <p:inputText id="tin"
+                                                 value="#{customerBean.customer.tin}"
+                                                 requiredMessage="#{msgs['Error.tin.mandatory']}"
+                                                 required="true"
+                                                 validatorMessage="#{msgs['Error.tin.wrongFormat']}"
+                                                 disabled="#{customerBean.mode eq 'EDIT'}">
+                                        <p:ajax event="keyup"
+                                                oncomplete="hideCustomerErrMsg('tin')"/>
+                                        <f:validateRegex pattern="^\d{10}$"/>
+                                    </p:inputText><p:message id="m_tin"
+                                                             for="tin"
+                                                             display="text"/>
+                                </div>
+
+                                <div class="item">
+                                    <p:outputLabel id="l_passport"
+                                                   for="passport"
+                                                   value="#{msgs['customerForm.passport']}"/>
+                                    <p:inputText id="passport"
+                                                 value="#{customerBean.customer.passport}"
+                                                 requiredMessage="#{msgs['Error.passport.mandatory']}"
+                                                 required="true"
+                                                 validatorMessage="#{msgs['Error.passport.wrongFormat']}"
+                                                 style="text-transform: uppercase">
+                                        <p:ajax event="keyup"
+                                                oncomplete="hideCustomerErrMsg('passport')"/>
+                                        <f:validateRegex pattern="^[a-zA-Z]{2}\d{6}$"/>
+                                    </p:inputText>
+                                    <p:message id="m_passport"
+                                               for="passport"
+                                               display="text"/>
+                                </div>
+
+                                <div class="item">
+                                    <p:outputLabel id="l_dateIssue"
+                                                   for="dateIssue"
+                                                   value="#{msgs['customerForm.dateOfIssue']}"/>
+                                    <p:calendar id="dateIssue"
+                                                widgetVar="dateIssueVar"
+                                                value="#{customerBean.customer.dateOfIssue}"
+                                                showOn="button"
+                                                navigator="true"
+                                                pattern="MM/dd/yyyy"
+                                                yearRange="-120:+0"
+                                                mindate="#{dateBean.minDate}"
+                                                maxdate="#{dateBean.maxDateOfIssue}"
+                                                required="true"
+                                                requiredMessage="#{msgs['Error.dateIssue.mandatory']}"
+                                                converterMessage="#{msgs['Error.dateIssue.wrongFormat']}">
+                                        <p:ajax event="dateSelect" update="m_dateIssue"/>
+                                        <p:ajax event="keyup"
+                                                oncomplete="hideCustomerCalendarErrMsg('dateIssue', 'dateIssueVar')"/>
+                                        <f:validator binding="#{dateOfIssueValidator}"/>
+                                    </p:calendar>
+                                    <p:message id="m_dateIssue" for="dateIssue" display="text"/>
+                                </div>
+                            </div>
+                        </div>
+                    </p:tab>
+
+                    <p:tab id="tab_2"
+                           title="#{msgs['customerForm.contactDetails']}">
+                        <h3>#{msgs['customerForm.registration']}</h3>
+                        <div class="container-A">
+                            <div>
+                                <div class="item">
+                                    <p:outputLabel id="l_country"
+                                                   for="country"
+                                                   value="#{msgs['customerForm.country']}"/>
+                                    <p:selectOneMenu id="country"
+                                                     value="#{customerBean.customer.regAddress.country}"
+                                                     filter="true"
+                                                     filterMatchMode="startsWith"
+                                                     converter="#{countryConverter}">
+                                        <f:selectItems value="#{customerBean.allCountriesList}"
+                                                       var="country"
+                                                       itemLabel="#{country.country}"
+                                                       itemValue="#{country}"/>
+                                    </p:selectOneMenu>
+                                </div>
+
+                                <div class="item">
+                                    <p:outputLabel id="l_zip"
+                                                   for="zip"
+                                                   value="#{msgs['customerForm.zip']}"/>
+                                    <p:inputText id="zip"
+                                                 value="#{customerBean.customer.regAddress.zip}"
+                                                 requiredMessage="#{msgs['Error.zip.mandatory']}"
+                                                 required="true"
+                                                 validatorMessage="#{msgs['Error.zip.wrongFormat']}">
+                                        <p:ajax event="keyup"
+                                                oncomplete="hideCustomerErrMsg('zip')"/>
+                                        <f:validateRegex pattern="^\d{5}$"/>
+                                    </p:inputText><p:message id="m_zip"
+                                                             for="zip"
+                                                             display="text"/>
+                                </div>
+                            </div>
+                            <div>
+
+                                <div class="item">
+                                    <p:outputLabel id="l_state"
+                                                   for="state"
+                                                   value="#{msgs['customerForm.state']}"/>
+                                    <p:inputText id="state"
+                                                 value="#{customerBean.customer.regAddress.state}"
+                                                 requiredMessage="#{msgs['Error.state.mandatory']}"
+                                                 required="true">
+                                        <p:ajax event="keyup"
+                                                oncomplete="hideCustomerErrMsg('state')"/>
+                                        <f:validator validatorId="addressValidator"/>
+                                    </p:inputText>
+                                    <div class="address-message">
+                                        <p:message id="m_state"
+                                                   for="state"
+                                                   display="text"/>
+                                    </div>
+                                </div>
+
+                                <div class="item">
+                                    <p:outputLabel id="l_city"
+                                                   for="city"
+                                                   value="#{msgs['customerForm.city']}"/>
+                                    <p:inputText id="city"
+                                                 value="#{customerBean.customer.regAddress.city}"
+                                                 requiredMessage="#{msgs['Error.city.mandatory']}"
+                                                 required="true">
+                                        <p:ajax event="keyup"
+                                                oncomplete="hideCustomerErrMsg('city')"/>
+                                        <f:validator validatorId="addressValidator"/>
+                                    </p:inputText>
+                                    <div class="address-message">
+                                        <p:message id="m_city"
+                                                   for="city"
+                                                   display="text"/>
+                                    </div>
+                                </div>
+
+                                <div class="item">
+                                    <p:outputLabel id="l_address"
+                                                   for="address"
+                                                   value="#{msgs['customerForm.address']}"/>
+                                    <p:inputText id="address"
+                                                 value="#{customerBean.customer.regAddress.address}"
+                                                 requiredMessage="#{msgs['Error.address.mandatory']}"
+                                                 required="true">
+                                        <p:ajax event="keyup"
+                                                oncomplete="hideCustomerErrMsg('address')"/>
+                                        <f:validator validatorId="addressValidator"/>
+                                    </p:inputText>
+                                    <div class="address-message">
+                                        <p:message id="m_address"
+                                                   for="address"
+                                                   display="text"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3>#{msgs['customerForm.mailing']}</h3>
+                        <h:panelGrid id="question"
+                                     columns="2"
+                                     cellpadding="5">
+                            <p:outputLabel for="radioButtons"
+                                           value="#{msgs['customerForm.question']}"/>
+                            <p:selectOneRadio id="radioButtons"
+                                              value="#{customerBean.sameAddress}"
+                                              style="width: 120px;">
+                                <f:selectItem itemValue="#{true}" itemLabel="Yes"/>
+                                <f:selectItem itemValue="#{false}" itemLabel="No"/>
+                                <p:ajax update="mailingAddress"
+                                        resetValues="true"/>
+                                <f:ajax render="mailingAddress"/>
+                            </p:selectOneRadio>
+                        </h:panelGrid>
+                        <h:panelGroup id="mailingAddress">
+                            <h:panelGroup rendered="#{!customerBean.sameAddress}">
+                                <div class="container-A">
+                                    <div>
+
+                                        <div class="item">
+                                            <p:outputLabel id="l_country2"
+                                                           for="country2"
+                                                           value="#{msgs['customerForm.country']}"/>
+                                            <p:selectOneMenu id="country2"
+                                                             value="#{customerBean.customer.mailAddress.country}"
+                                                             filter="true"
+                                                             filterMatchMode="startsWith"
+                                                             converter="#{countryConverter}">
+                                                <f:selectItems value="#{customerBean.allCountriesList}"
+                                                               var="country"
+                                                               itemLabel="#{country.country}"
+                                                               itemValue="#{country}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+
+                                        <div class="item">
+                                            <p:outputLabel id="l_zip2"
+                                                           for="zip2"
+                                                           value="#{msgs['customerForm.zip']}"/>
+                                            <p:inputText id="zip2"
+                                                         value="#{customerBean.customer.mailAddress.zip}"
+                                                         required="true"
+                                                         requiredMessage="#{msgs['Error.zip.mandatory']}"
+                                                         validatorMessage="#{msgs['Error.zip.wrongFormat']}">
+                                                <p:ajax event="keyup"
+                                                        oncomplete="hideCustomerErrMsg('zip2')"/>
+                                                <f:validateRegex pattern="^\d{5}$"/>
+                                            </p:inputText><p:message id="m_zip2"
+                                                                     for="zip2"
+                                                                     display="text"/>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="item">
+                                            <p:outputLabel id="l_state2"
+                                                           for="state2"
+                                                           value="#{msgs['customerForm.state']}"/>
+                                            <p:inputText id="state2"
+                                                         value="#{customerBean.customer.mailAddress.state}"
+                                                         required="true"
+                                                         requiredMessage="#{msgs['Error.state.mandatory']}">
+                                                <p:ajax event="keyup"
+                                                        oncomplete="hideCustomerErrMsg('state2')"/>
+                                                <f:validator validatorId="addressValidator"/>
+                                            </p:inputText>
+                                            <div class="address-message">
+                                                <p:message id="m_state2"
+                                                           for="state2"
+                                                           display="text"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="item">
+                                            <p:outputLabel id="l_city2"
+                                                           for="city2"
+                                                           value="#{msgs['customerForm.city']}"/>
+                                            <p:inputText id="city2"
+                                                         value="#{customerBean.customer.mailAddress.city}"
+                                                         required="true"
+                                                         requiredMessage="#{msgs['Error.city.mandatory']}">
+                                                <p:ajax event="keyup"
+                                                        oncomplete="hideCustomerErrMsg('city2')"/>
+                                                <f:validator validatorId="addressValidator"/>
+                                            </p:inputText>
+                                            <div class="address-message">
+                                                <p:message id="m_city2"
+                                                           for="city2"
+                                                           display="text"/>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <p:outputLabel id="l_address2"
+                                                           for="address2"
+                                                           value="#{msgs['customerForm.address']}"/>
+                                            <p:inputText id="address2"
+                                                         value="#{customerBean.customer.mailAddress.address}"
+                                                         required="true"
+                                                         requiredMessage="#{msgs['Error.address.mandatory']}">
+                                                <p:ajax event="keyup"
+                                                        oncomplete="hideCustomerErrMsg('address2')"/>
+                                                <f:validator validatorId="addressValidator"/>
+                                            </p:inputText>
+                                            <div class="address-message">
+                                                <p:message id="m_address2" for="address2" display="text"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:panelGroup>
+                        </h:panelGroup>
+
+                        <h3>#{msgs['customerForm.contact']}</h3>
+                        <div class="container-A">
+                            <div>
+                                <div class="item">
+                                    <p:outputLabel id="l_phone" for="phone"
+                                                   value="#{msgs['customerForm.phone']}"/>
+                                    <p:inputText id="phone"
+                                                 value="#{customerBean.customer.mobileNum}"
+                                                 required="true"
+                                                 requiredMessage="#{msgs['Error.phone.mandatory']}"
+                                                 validatorMessage="#{msgs['Error.phone.wrongFormat']}">
+                                        <p:ajax event="keyup"
+                                                oncomplete="hideCustomerErrMsg('phone')"/>
+                                        <f:validateRegex pattern="^380[\d]{9}$"/>
+                                        <p:ajax event="change"
+                                                update="login"/>
+                                    </p:inputText>
+                                    <p:message id="m_phone" for="phone" display="text"/>
+                                </div>
+
+                                <div class="item">
+                                    <p:outputLabel id="l_email" for="email"
+                                                   value="#{msgs['customerForm.email']}"/>
+                                    <p:inputText id="email"
+                                                 value="#{customerBean.customer.email}"
+                                                 validatorMessage="#{msgs['Error.email.wrongFormat']}">
+                                        <p:ajax event="keyup" oncomplete="hideCustomerErrMsg('email')"/>
+                                        <f:validateRegex
+                                                pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                                    </p:inputText>
+                                    <p:message id="m_email" for="email" display="text"/>
+                                </div>
+                            </div>
+                        </div>
+                    </p:tab>
+
+                    <p:tab id="tab_3"
+                           title="#{msgs['customerForm.customerSpecificInformation']}">
+                        <div class="container-A">
+                            <div>
+                                <div class="item">
+                                    <p:outputLabel id="l_login" for="login"
+                                                   value="#{msgs['customerForm.login']}"/>
+                                    <p:inputText id="login" value="#{customerBean.customer.mobileNum}"
+                                                 disabled="true"/>
+                                </div>
+
+                                <div class="item"
+                                     style="height: initial">
+                                    <p:outputLabel id="l_passDef" for="passDef"
+                                                   value="#{msgs['customerForm.defaultPassword']}"/>
+                                    <p:password id="passDef" value="#{customerBean.customer.password}"
+                                                feedback="true" label="Default Password"
+                                                redisplay="true" required="true"
+                                                requiredMessage="#{msgs['Error.passDef.mandatory']}"
+                                                validatorMessage="#{msgs['Error.passDef.wrongFormat']}">
+                                        <p:ajax event="keyup" oncomplete="hideCustomerErrMsg('passDef')"/>
+                                        <f:validateRegex
+                                                pattern="(?=.{8,})((?=.*\d)(?=.*[a-z])(?=.*[A-Z])|(?=.*\d)(?=.*[A-Z])(?=.*[\W_])|(?=.*\d)(?=.*[a-z])(?=.*[\W_])|(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_])|(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_])).*"/>
+                                    </p:password>
+                                    <div class="pass-message">
+                                        <p:message id="m_passDef" for="passDef" display="text"/>
+                                    </div>
+                                </div>
+
+                                <div class="item">
+                                    <p:outputLabel id="l_passConf" for="passConf"
+                                                   value="#{msgs['customerForm.confirmPassword']}"/>
+                                    <p:password id="passConf" value="#{customerBean.customer.password}"
+                                                redisplay="true" required="true"
+                                                requiredMessage="#{msgs['Error.passConf.mandatory']}">
+                                        <f:validator validatorId="confirmPasswordValidator"/>
+                                        <p:ajax event="keyup" oncomplete="hideCustomerErrMsg('passConf')"/>
+                                    </p:password>
+                                    <div class="pass-message">
+                                        <p:message id="m_passConf" for="passConf" display="text"/>
+                                    </div>
+                                </div>
+
+                                <div class="item">
+                                    <p:outputLabel id="l_codeword" for="codeword"
+                                                   value="#{msgs['customerForm.codeword']}"/>
+                                    <p:inputText id="codeword"
+                                                 value="#{customerBean.customer.codeword}"
+                                                 validatorMessage="#{msgs['Error.codeWord.wrongFormat']}">
+                                        <p:ajax event="keyup"
+                                                oncomplete="hideCustomerErrMsg('codeword')"/>
+                                        <f:validateRegex pattern="^[a-zA-Z\s-]{1,255}$"/>
+                                    </p:inputText>
+                                    <div class="code-message">
+                                        <p:message id="m_codeword"
+                                                   for="codeword"
+                                                   display="text"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p:tab>
+
+                    <p:tab id="tab_4" title="#{msgs['customerForm.accounts']}">
+
+                        <ui:include src="includes/accounts_table.xhtml"/>
+                        <br/>
+                        <p:commandButton value="#{msgs['customerForm.addAccount']}"
+                                         onclick="customerFormSpaceTrimmer()"
+                                         update="createEditCustomerForm"
+                                         action="#{customerBean.addAccount}"/>
+                    </p:tab>
+
+                    <p:tab id="tab_5" title="#{msgs['customerForm.cards']}">
+
+                        <ui:include src="includes/cards_table.xhtml"/>
+                        <br/>
+                        <p:commandButton value="#{msgs['customerForm.addCard']}"
+                                         onclick="customerFormSpaceTrimmer()"
+                                         update="createEditCustomerForm"
+                                         action="#{customerBean.addCard}"
+                                         disabled="#{!customerBean.addCardEnabled}"/>
+                    </p:tab>
+                </p:accordionPanel>
+
+                <div class="errorMessages">
+                    <h:outputText id="g_tin"
+                                  value="#{msgs['Error.tin.duplicate']}"
+                                  rendered="#{customerBean.tinDuplicate}"
+                                  styleClass="ui-message-error"/>
+                    <p:spacer width="20"/>
+                    <h:outputText id="g_phone"
+                                  value="#{msgs['Error.phone.duplicate']}"
+                                  rendered="#{customerBean.mobileDuplicate}"
+                                  styleClass="ui-message-error"/>
+                    <p:spacer width="20"/>
+                    <h:outputText id="g_passDef"
+                                  value="#{msgs['Error.password.history']}"
+                                  rendered="#{!customerBean.tinDuplicate and !customerBean.mobileDuplicate and customerBean.passwordDuplicate}"
+                                  styleClass="ui-message-error"/>
+                </div>
+
+                <div class="commandButtons-1">
+                    <p:commandButton value="#{msgs['customerForm.save']}"
+                                     icon="ui-icon-check"
+                                     update="createEditCustomerForm"
+                                     onclick="customerFormSpaceTrimmer()"
+                                     action="#{customerBean.saveCustomer}"/>
+
+                    <p:commandButton value="#{msgs['customerForm.cancel']}"
+                                     immediate="true"
+                                     action="#{customerBean.backToSearch}"/>
+                    <p:commandButton id="dummy"
+                                     process="@none"
+                                     global="false"
+                                     style="display:none;"/>
+                </div>
+
+                <ui:include src="includes/exception_window.xhtml"/>
+            </h:form>
+
+            <ui:include src="includes/card_deactivation.xhtml"/>
+            <ui:include src="includes/account_deactivation.xhtml"/>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

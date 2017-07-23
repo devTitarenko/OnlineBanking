@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:body>
+    <ui:composition template="../default.xhtml">
+        <ui:define name="content">
+            <h:form id="reports">
+
+                <div style="margin-left: 70px;">
+                    <h2>#{msgs['reportsHtml.title']}</h2>
+                    <h2> Report generation date : #{htmlReportBean.getCurrentDate()}</h2>
+                </div>
+
+                <p:dataTable var="cardReportDTO" value="#{htmlReportBean.reportsList}">
+                    <p:column headerText="#{msgs['reportsHtml.number']}">
+                        <h:outputText value="#{htmlReportBean.reportsList.indexOf(cardReportDTO) + 1}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs['reportsHtml.accountNumber']}">
+                        <h:outputText value="#{cardReportDTO.accountNumber}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs['reportsHtml.accountType']}">
+                        <h:outputText value="#{cardReportDTO.accountType}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs['reportsHtml.accountStatus']}">
+                        <h:outputText value="#{cardReportDTO.accountStatus}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs['reportsHtml.cardNumber']}">
+                        <h:outputText value="#{cardReportDTO.cardNumber}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs['reportsHtml.cardType']}">
+                        <h:outputText value="#{cardReportDTO.cardType}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs['reportsHtml.cardholderName']}">
+                        <h:outputText value="#{cardReportDTO.cardholder}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs['reportsHtml.customerName']}">
+                        <h:outputText value="#{cardReportDTO.customerName}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs['reportsHtml.cardStatus']}">
+                        <h:outputText value="#{cardReportDTO.cardStatus}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs['reportsHtml.effectiveDate']}">
+                        <h:outputText value="#{cardReportDTO.effectiveDate}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs['reportsHtml.expirationDate']}">
+                        <h:outputText value="#{cardReportDTO.expirationDate}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs['reportsHtml.balance']}">
+                        <h:outputText value="#{cardReportDTO.balance}"/>
+                    </p:column>
+                    <p:column headerText="#{msgs['reportsHtml.currency']}">
+                        <h:outputText value="#{cardReportDTO.currency}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

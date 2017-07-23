@@ -1,0 +1,36 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   					   http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/security
+                           http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <import resource="classpath*:/META-INF/spring-context.xml"/>
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.eisgroup.cb"/>
+
+    <security:http auto-config="true" use-expressions="true">
+        <security:intercept-url pattern="/pages/login_admin.xhtml" access="permitAll"/>
+        <security:intercept-url pattern="/pages/customer/change_password.xhtml" access="permitAll"/>
+        <security:intercept-url pattern="/pages/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/pages/customer/**" access="hasRole('ROLE_USER')"/>
+        <security:form-login login-page="/pages/login_customer.xhtml"/>
+        <security:access-denied-handler error-page="/pages/customer/main.xhtml?i=-1"/>
+        <security:csrf disabled="true"/>
+    </security:http>
+
+    <security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider>
+            <security:user-service>
+                <security:user authorities="ROLE_ADMIN" name="admin" password="admin"/>
+                <security:user authorities="ROLE_USER" name="user" password="user"/>
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+</beans>

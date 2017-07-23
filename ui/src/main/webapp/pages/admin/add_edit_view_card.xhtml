@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:body>
+    <ui:composition template="../default.xhtml">
+        <ui:define name="content">
+            <h:form id="createEditViewCardForm">
+                <p:defaultCommand target="dummy"/>
+                <h2>
+                    <c:if test="#{cardBean.mode eq 'VIEW'}">#{msgs['cardForm.header.viewCard']}</c:if>
+                    <c:if test="#{cardBean.mode eq 'ADD'}">#{msgs['cardForm.header.addCard']}</c:if>
+                    <c:if test="#{cardBean.mode eq 'EDIT'}">#{msgs['cardForm.header.editCard']}</c:if>
+                </h2>
+
+                <div class="container-A"
+                     style="width: 420px;">
+                    <div class="item">
+                        <p:outputLabel for="accountNumber"
+                                       value="#{msgs['cardForm.accountNumber']}"/>
+                        <p:selectOneMenu id="accountNumber"
+                                         value="#{cardBean.account}"
+                                         required="true"
+                                         requiredMessage="#{msgs['Error.accountNumber.mandatory']}"
+                                         disabled="#{!(cardBean.mode eq 'ADD')}">
+                            <f:selectItem/>
+                            <f:selectItems value="#{cardBean.accounts}"
+                                           var="account"
+                                           itemValue="#{account}"
+                                           itemLabel="#{account.accountNumber}"/>
+                            <f:converter binding="#{accountConverter}"/>
+                            <p:ajax event="change"
+                                    update="currency effectiveDate expirationDate"
+                                    listener="#{cardBean.cardAccountNumberListener}"/>
+                            <f:attribute id="customer"
+                                         name="customer"
+                                         value="#{cardBean.customer}"/>
+                        </p:selectOneMenu>
+                        <p:message id="m_accountNumber"
+                                   for="accountNumber"
+                                   display="text"/>
+                    </div>
+
+
+                    <div class="item">
+                        <p:outputLabel for="cardType"
+                                       value="#{msgs['cardForm.cardType']}"/>
+                        <p:selectOneMenu id="cardType"
+                                         value="#{cardBean.cardDTO.cardType}"
+                                         required="true"
+                                         requiredMessage="#{msgs['Error.cardType.mandatory']}"
+                                         disabled="#{!(cardBean.mode eq 'ADD')}">
+                            <f:ajax execute="@this"
+                                    event="change"
+                                    render="m_cardType"/>
+                            <f:selectItem/>
+                            <f:selectItems value="#{cardBean.cardTypes}"
+                                           var="cardType"
+                                           itemValue="#{cardType}"
+                                           itemLabel="#{msgs['cardType.'.concat(cardType)]}"/>
+                            <p:ajax event="change"
+                                    update="cardNumber"
+                                    listener="#{cardBean.cardTypeChangeListener}"/>
+                        </p:selectOneMenu>
+                        <p:message id="m_cardType"
+                                   for="cardType"
+                                   display="text"/>
+                    </div>
+
+
+                    <div class="item">
+                        <p:outputLabel for="cardNumber"
+                                       value="#{msgs['cardForm.cardNumber']}"/>
+                        <p:inputText id="cardNumber"
+                                     value="#{cardBean.cardDTO.cardNumber}"
+                                     disabled="true">
+                        </p:inputText>
+                    </div>
+
+
+                    <div class="item">
+                        <p:outputLabel for="cardHolder"
+                                       value="#{msgs['cardForm.cardHolder']}"/>
+                        <p:inputText id="cardHolder"
+                                     value="#{cardBean.cardDTO.cardHolder}"
+                                     requiredMessage="#{msgs['Error.cardHolder.mandatory']}"
+                                     validatorMessage="#{msgs['Error.cardHolder.wrongFormat']}"
+                                     required="true"
+                                     disabled="#{!(cardBean.mode eq 'ADD')}"
+                                     validator="#{cardBean.checkLength}">
+                            <p:ajax event="keyup"
+                                    oncomplete="hideCardErrMsg('cardHolder')"/>
+                            <f:validateRegex pattern="^([a-zA-Z]+[a-zA-Z\s\-]*){1,511}$"/>
+                        </p:inputText>
+                        <p:message id="m_cardHolder"
+                                   for="cardHolder"
+                                   display="text"/>
+                    </div>
+
+
+                    <div class="item">
+                        <p:outputLabel for="effectiveDate"
+                                       value="#{msgs['cardForm.effectiveDate']}"/>
+                        <p:calendar id="effectiveDate"
+                                    widgetVar="123456789Pas"
+                                    value="#{cardBean.cardDTO.effectiveDate}"
+                                    pattern="MM/dd/yyyy"
+                                    showOn="button"
+                                    navigator="true"
+                                    required="true"
+                                    requiredMessage="#{msgs['Error.effectiveDate.mandatory']}"
+                                    converterMessage="#{msgs['Error.dateIssue.wrongFormat']}"
+                                    disabled="#{!(cardBean.mode eq 'ADD')}"
+                                    binding="#{effectiveDate}">
+                            <f:attribute id="accountValidFrom"
+                                         name="accountValidFrom"
+                                         value="#{cardBean.account.validFrom}"/>
+                            <p:ajax event="dateSelect"
+                                    update="expirationDate"/>
+                            <p:ajax event="dateSelect"
+                                    render="m_effectiveDate"/>
+                            <p:ajax event="keyup"
+                                    oncomplete="hideCardCalendarErrMsg('effectiveDate', 'effectiveDateVar')"/>
+                            <f:validator binding="#{cardEffectiveDateValidator}"/>
+                        </p:calendar>
+                        <p:message id="m_effectiveDate"
+                                   for="effectiveDate"
+                                   display="text"/>
+                    </div>
+
+                    <div class="item">
+                        <p:outputLabel for="expirationDate"
+                                       value="#{msgs['cardForm.expirationDate']}"/>
+                        <p:calendar id="expirationDate"
+                                    widgetVar="expirationDateVar"
+                                    value="#{cardBean.cardDTO.expirationDate}"
+                                    pattern="MM/dd/yyyy"
+                                    showOn="button"
+                                    navigator="true"
+                                    required="true"
+                                    requiredMessage="#{msgs['Error.expirationDate.mandatory']}"
+                                    converterMessage="#{msgs['Error.dateIssue.wrongFormat']}"
+                                    disabled="#{cardBean.mode eq 'VIEW'}">
+                            <f:attribute id="accountValidTo"
+                                         name="accountValidTo"
+                                         value="#{cardBean.account.validTo}"/>
+                            <p:ajax event="dateSelect"
+                                    render="m_expirationDate"/>
+                            <p:ajax event="keyup"
+                                    oncomplete="hideCardCalendarErrMsg('expirationDate', 'expirationDateVar')"/>
+                            <f:validator binding="#{cardExpirationDateValidator}"/>
+                            <f:attribute name="effectiveDate"
+                                         value="#{effectiveDate}"/>
+                        </p:calendar>
+                        <p:message id="m_expirationDate"
+                                   for="expirationDate"
+                                   display="text"/>
+                    </div>
+
+
+                    <div class="item">
+                        <p:outputLabel for="currency"
+                                       value="#{msgs['cardForm.currency']}"/>
+                        <p:inputText id="currency"
+                                     value="#{cardBean.account.currency}"
+                                     disabled="true">
+                        </p:inputText>
+                    </div>
+
+
+                    <div class="item">
+                        <p:outputLabel for="cvv2"
+                                       value="#{msgs['cardForm.cvv2']}"/>
+                        <p:inputText id="cvv2"
+                                     value="#{cardBean.cardDTO.cvv2}"
+                                     disabled="true">
+                        </p:inputText>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                <h:panelGroup id="addOrEdit">
+                    <div class="commandButtons-1">
+                        <p:commandButton value="#{msgs['cardForm.button.save']}"
+                                         icon="ui-icon-check"
+                                         update="createEditViewCardForm"
+                                         action="#{cardBean.preSaveCard}"
+                                         rendered="#{!(cardBean.mode.name() eq 'VIEW')}"/>
+                        <p:commandButton value="#{msgs['cardForm.button.cancel']}"
+                                         immediate="true"
+                                         action="#{cardBean.backToCustomerForm}"
+                                         rendered="#{!(cardBean.mode.name() eq 'VIEW')}"/>
+                        <p:commandButton value="#{msgs['cardForm.button.back']}"
+                                         immediate="true"
+                                         action="#{cardBean.backToCustomerForm}"
+                                         rendered="#{cardBean.mode.name() eq 'VIEW'}"/>
+                        <p:commandButton id="dummy"
+                                         process="@none"
+                                         global="false"
+                                         style="display:none;"/>
+                    </div>
+                </h:panelGroup>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:body>
+    <ui:composition template="../default.xhtml">
+        <ui:define name="header">
+            <div class="header-elements">
+                <div class="header-text">
+                    <h2>ACCOUNTS<br/>
+                        Your Bank Accounts
+                    </h2>
+                </div>
+                <ui:include src="includes/header_buttons.xhtml"/>
+            </div>
+
+            <ui:include src="includes/menu.xhtml"/>
+        </ui:define>
+
+        <ui:define name="content">
+
+            <br/>
+            <h:form id="customerAccountsForm">
+                <p:panelGrid id="custAccPanel" columns="1" styleClass="pGrid">
+                    <p:commandButton value="#{msgs['customer.account.statement']}" styleClass="accButton"
+                                     disabled="#{!customerAccountsBean.rowSelect}"/>
+                    <p:commandButton value="#{msgs['customer.account.details']}" immediate="true" styleClass="accButton"
+                                     disabled="#{!customerAccountsBean.rowSelect}" update="accountDetailsForm"
+                                     onclick="PF('accountDetailsDialog').show();"/>
+                    <p:commandButton value="#{msgs['customer.account.requestLimit']}" styleClass="accButton"
+                                     disabled="#{!customerAccountsBean.rowSelect}"/>
+                </p:panelGrid>
+                <h:outputText value="Note: Please select an Account to perform actions"
+                              rendered="${customerAccountsBean.hasActiveAccount}"
+                              styleClass="accNoteText"/>
+                <p>
+                    <h:outputText value="You have no active accounts at the moment"
+                                  rendered="${!customerAccountsBean.hasActiveAccount}"
+                    styleClass="font-bold"/>
+                </p>
+                <h2 style="margin-top:0"/>
+
+                <h:outputText value="#{msgs['customer.main.accounts']}"
+                              rendered="#{customerAccountsBean.hasActiveAccount}"
+                              styleClass="acctableheadertxt"/>
+                <h3 style="margin-top:0"/>
+                <p:dataTable id="customerAccountAccountsTable" var="account"
+                             value="#{customerAccountsBean.accountList}" rowKey="#{account.accountNumber}"
+                             selectionMode="single" rendered="#{customerAccountsBean.hasActiveAccount}">
+                    <p:ajax event="rowSelect" listener="#{customerAccountsBean.onRowSelect}"
+                            update=":customerAccountsForm:custAccPanel"/>
+                    <p:ajax event="rowUnselect" listener="#{customerAccountsBean.onRowUnselect}"
+                            update=":customerAccountsForm:custAccPanel"/>
+
+                    <p:column headerText="#{msgs['customer.main.account']}">
+                        <h:outputText value="#{account.accountNumber}"/>
+                    </p:column>
+                    <p:column headerText="#{msgs['customer.main.account.balance']}">
+                        <h:outputText value="#{account.balance}">
+                            <f:convertNumber type="currency" currencySymbol="" groupingUsed="false"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msgs['customer.main.account.limit']}">
+                        <h:outputText value="#{account.limit}">
+                            <f:convertNumber type="currency" currencySymbol="" groupingUsed="false"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{msgs['customer.main.account.currency']}" sortBy="#{account.currency}">
+                        <h:outputText value="#{account.currency}"/>
+                    </p:column>
+                    <p:column headerText="#{msgs['customer.main.account.type']}" sortBy="#{account.type.name}">
+                        <h:outputText value="#{account.type.name}"/>
+                    </p:column>
+                </p:dataTable>
+
+
+            </h:form>
+
+
+            <p:dialog id="accountDetailsDialog" header="#{msgs['customer.account.details.dialog']}"
+                      widgetVar="accountDetailsDialog" position="center center"
+                      modal="true" closable="false" resizable="false" width="650"
+                      onShow="PF('accountDetailsDialog').initPosition()">
+                <ui:include src="includes/account_details.xhtml"/>
+            </p:dialog>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:body>
+    <ui:composition template="default.xhtml">
+        <ui:define name="content">
+            <h:form id="loginForm">
+                <p:defaultCommand target="dummy"/>
+                <p:panel header="#{msgs['login.header']}"
+                         styleClass="login-form">
+                    <div class="item">
+                        <p:outputLabel value="Login"/>
+                        <p:inputText id="login"
+                                     placeholder="#{msgs['login.customer.placeholder']}"
+                                     value="#{customerLoginBean.customer.mobileNum}"
+                                     required="true"
+                                     requiredMessage="#{msgs['login.isEmpty']}"
+                                     validatorMessage="#{msgs['login.customer.format']}">
+                            <f:validateRegex pattern="^380[\d]{9}$"/>
+                            <p:ajax event="keyup" update="m_login"
+                                    oncomplete="hideLoginErrMsg('login')"/>
+                        </p:inputText>
+                        <p:message id="m_login"
+                                   for="login"
+                                   display="text"/>
+                    </div>
+                    <div class="item">
+                        <p:outputLabel value="Password "/>
+                        <p:password id="password"
+                                    value="#{customerLoginBean.customer.password}"
+                                    required="true"
+                                    requiredMessage="#{msgs['pass.isEmpty']}"
+                                    redisplay="true">
+                            <f:validateBean disabled="true"/>
+                            <p:ajax event="keyup" update="m_password"
+                                    oncomplete="hideLoginErrMsg('password')"/>
+                        </p:password>
+                        <p:message id="m_password"
+                                   for="password"
+                                   display="text"/>
+                    </div>
+
+                    <div class="login-forgot-link">
+                        <p:commandLink value="Forgot your password?"
+                                       immediate="true"
+                                       onclick="PF('forgotPasswordDialog').show();"
+                                       style="color: darkblue"/>
+                    </div>
+
+                    <div class="login-customer-button">
+                        <p:commandButton
+                                action="#{customerLoginBean.login}"
+                                value="#{msgs['login.signIn']}"
+                                update="message, loginForm"/>
+                        <p:commandButton id="dummy"
+                                         process="@none"
+                                         global="false"
+                                         style="display:none;"/>
+                    </div>
+
+                    <h:outputText id="message"
+                                  value="#{customerLoginBean.showMsg}"
+                                  styleClass="ui-message-error"
+                                  style="font-weight: bold;"/>
+                </p:panel>
+
+                <p:button outcome="AdminApp" value="Admin Application"
+                          styleClass="admin-app-button"/>
+
+            </h:form>
+            <ui:include src="customer/includes/forgot_password.xhtml"/>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

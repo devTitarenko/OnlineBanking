@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <h:form id="accountDetailsForm">
+
+        <h2>#{msgs['customer.account.details.general']}</h2>
+        <p:panelGrid columns="2" styleClass="width-100">
+            <h:outputText value="#{msgs['customer.account.details.number']}"/>
+            <h:outputText value="#{customerAccountsBean.selectedAccount.accountNumber}"/>
+
+            <h:outputText value="#{msgs['customer.account.details.type']}"/>
+            <h:outputText value="#{customerAccountsBean.selectedAccount.type.name}"/>
+
+            <h:outputText value="#{msgs['customer.account.details.from']}"/>
+            <h:outputText value="#{customerAccountsBean.selectedAccount.validFrom}" converter="#{dateConverter}"/>
+
+            <h:outputText value="#{msgs['customer.account.details.to']}"/>
+            <h:outputText value="#{customerAccountsBean.selectedAccount.validTo}" converter="#{dateConverter}"/>
+
+            <h:outputText value="#{msgs['customer.account.details.status']}"/>
+            <h:outputText value="#{customerAccountsBean.selectedAccount.status.name}"/>
+
+            <h:outputText value="#{msgs['customer.account.details.currency']}"/>
+            <h:outputText value="#{customerAccountsBean.selectedAccount.currency}"/>
+
+            <h:outputText value="#{msgs['customer.account.details.balance']}"/>
+            <h:outputText value="#{customerAccountsBean.selectedAccount.balance}">
+                <f:convertNumber type="currency" currencySymbol="" groupingUsed="false"/>
+            </h:outputText>
+
+            <h:outputText value="#{msgs['customer.account.details.limit']}"
+                          rendered="#{customerAccountsBean.selectedAccount.type eq 'LOAN'}"/>
+            <h:outputText value="#{customerAccountsBean.selectedAccount.limit}"
+                          rendered="#{customerAccountsBean.selectedAccount.type eq 'LOAN'}">
+                <f:convertNumber type="currency" currencySymbol="" groupingUsed="false"/>
+            </h:outputText>
+        </p:panelGrid>
+
+        <h2>#{customerAccountsBean.selectedAccount.type eq 'LOAN'
+                or customerAccountsBean.selectedAccount.type eq 'PAYMENT' ?
+                msgs['customer.account.details.cards'] : ""}</h2>
+        <p:dataTable var="card" value="#{customerAccountsBean.selectedAccount.cards}"
+                     scrollable="#{customerAccountsBean.selectedAccount.cards.size() > 5 ? true : false}"
+                     scrollHeight="135"
+                     rendered="#{customerAccountsBean.selectedAccount.type eq 'LOAN'
+                              or customerAccountsBean.selectedAccount.type eq 'PAYMENT'}">
+            <p:column headerText="#{msgs['customer.account.details.cardNum']}">
+                <h:outputText value="#{card.cardNumber}" converter="#{cardNumberConverter}"/>
+            </p:column>
+
+            <p:column headerText="#{msgs['customer.account.details.cardTyp']}">
+                <h:outputText value="#{card.cardType.name}"/>
+            </p:column>
+
+            <p:column headerText="#{msgs['customer.account.details.cardholder']}">
+                <h:outputText value="#{card.cardHolder}"/>
+            </p:column>
+
+            <p:column headerText="#{msgs['customer.account.details.status']}">
+                <h:outputText value="#{card.status.name}"/>
+            </p:column>
+        </p:dataTable>
+
+        <br/>
+        <h2>#{msgs['customer.account.details.addition']}</h2>
+        <p>#{msgs['customer.account.details.text1']}</p>
+        <ul>
+            <li>#{msgs['customer.account.details.text2']}</li>
+            <li>#{msgs['customer.account.details.text3']}</li>
+        </ul>
+        <p>#{msgs['customer.account.details.text4']}</p>
+        <ul>
+            <li>#{msgs['customer.account.details.text5']}</li>
+            <li>#{msgs['customer.account.details.text6']}</li>
+        </ul>
+
+        <br/>
+        <div class="commandButtons-1">
+            <p:commandButton value="#{msgs['customer.account.details.back']}"
+                             oncomplete="PF('accountDetailsDialog').hide();"/>
+        </div>
+    </h:form>
+
+    <f:facet name="footer">
+        <h:outputText/>
+    </f:facet>
+</ui:composition>

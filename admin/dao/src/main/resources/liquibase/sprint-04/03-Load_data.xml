@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+
+    <changeSet id="05-EC-341-Country-load-data" author="Titarenko" failOnError="true">
+        <comment>EC-341 Create Domain model + Liquibase scripts, load data to table Country</comment>
+        <loadData tableName="ADDRESS"
+                  file="data/ADDRESS.csv"
+                  encoding="UTF-8"
+                  separator=","
+                  relativeToChangelogFile="true">
+            <column name="ID" type="NUMERIC"/>
+            <column name="COUNTRY" type="NUMERIC"/>
+            <column name="ZIP" type="STRING"/>
+            <column name="STATE" type="STRING"/>
+            <column name="CITY" type="STRING"/>
+            <column name="ADDRESS" type="STRING"/>
+        </loadData>
+        <loadData tableName="CUSTOMER"
+                  file="data/CUSTOMER.csv"
+                  encoding="UTF-8"
+                  separator=","
+                  relativeToChangelogFile="true">
+            <column name="ID" type="NUMERIC"/>
+            <column name="FIRSTNAME" type="STRING"/>
+            <column name="LASTNAME" type="STRING"/>
+            <column name="DATEOFBIRTH" type="DATE"/>
+            <column name="GENDER" type="STRING"/>
+            <column name="MARITALSTATUS" type="STRING"/>
+            <column name="TIN" type="STRING"/>
+            <column name="PASSPORT" type="STRING"/>
+            <column name="DATEOFISSUE" type="DATE"/>
+            <column name="REGADDRESS" type="NUMERIC"/>
+            <column name="MAILADDRESS" type="NUMERIC"/>
+            <column name="MOBILENUM" type="STRING"/>
+            <column name="EMAIL" type="STRING"/>
+            <column name="PASS" type="STRING"/>
+            <column name="CODEWORD" type="STRING"/>
+        </loadData>
+        <loadData tableName="ACCOUNT"
+                  file="data/ACCOUNT.csv"
+                  encoding="UTF-8"
+                  separator=","
+                  relativeToChangelogFile="true">
+            <column name="ID" type="NUMERIC"/>
+            <column name="TYPE" type="STRING"/>
+            <column name="ACCOUNTNUMBER" type="NUMERIC"/>
+            <column name="VALIDFROM" type="DATE"/>
+            <column name="VALIDTO" type="DATE"/>
+            <column name="CURRENCY" type="STRING"/>
+            <column name="BALANCE" type="NUMERIC"/>
+            <column name="LIMIT" type="NUMERIC"/>
+            <column name="FK_CUSTOMER_ID" type="NUMERIC"/>
+            <column name="VERSION" type="NUMERIC"/>
+        </loadData>
+        <loadData tableName="CARD"
+                  file="data/CARD.csv"
+                  encoding="UTF-8"
+                  separator=","
+                  relativeToChangelogFile="true">
+            <column name="ID" type="NUMERIC"/>
+            <column name="TYPE" type="STRING"/>
+            <column name="CARDNUMBER" type="NUMERIC"/>
+            <column name="CARDHOLDER" type="STRING"/>
+            <column name="EFFECTIVEDATE" type="DATE"/>
+            <column name="EXPIRATIONDATE" type="DATE"/>
+            <column name="CVV2" type="STRING"/>
+            <column name="ACCOUNTID" type="NUMERIC"/>
+            <column name="ISBLOCKED" type="NUMERIC"/>
+        </loadData>
+        <loadData tableName="PASSWORDHISTORY"
+                  file="data/PASSWORDHISTORY.csv"
+                  encoding="UTF-8"
+                  separator=","
+                  relativeToChangelogFile="true">
+            <column name="ID" type="NUMERIC"/>
+            <column name="PASSWORD" type="STRING"/>
+            <column name="FK_CUSTOMER_ID" type="NUMERIC"/>
+        </loadData>
+        <loadData tableName="TRANSFERRECORD"
+                  file="data/TRANSFERRECORD.csv"
+                  encoding="UTF-8"
+                  separator=","
+                  relativeToChangelogFile="true">
+            <column name="ID" type="NUMERIC"/>
+            <column name="TRANSACTIONDATEANDTIME" type="DATE"/>
+            <column name="TRANSACTIONTYPE" type="STRING"/>
+            <column name="TRANSACTIONSUBTYPE" type="STRING"/>
+            <column name="CREDITACCOUNTNUMBER" type="STRING"/>
+            <column name="DEBITACCOUNTNUMBER" type="STRING"/>
+            <column name="TRANSACTIONAMOUNT" type="NUMERIC"/>
+            <column name="TRANSACTIONCURRENCY" type="STRING"/>
+            <column name="TRANSACTIONLOCATION" type="STRING"/>
+            <column name="PERFORMERID" type="NUMERIC"/>
+            <column name="STARTINGBALANCE" type="NUMERIC"/>
+            <column name="ENDINGBALANCE" type="NUMERIC"/>
+            <column name="CARDFROMNUMBER" type="STRING"/>
+            <column name="CARDTONUMBER" type="STRING"/>
+            <column name="ENTRYTYPE" type="STRING"/>
+        </loadData>
+        <rollback>
+            <sql>DELETE FROM ADDRESS</sql>
+            <sql>DELETE FROM CUSTOMER</sql>
+            <sql>DELETE FROM ACCOUNT</sql>
+            <sql>DELETE FROM CARD</sql>
+            <sql>DELETE FROM PASSWORDHISTORY</sql>
+            <sql>DELETE FROM TRANSFERRECORD</sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

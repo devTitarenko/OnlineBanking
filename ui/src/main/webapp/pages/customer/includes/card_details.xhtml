@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <h:form id="cardDetailsForm">
+        <h2>#{msgs['customer.card.details.general']}</h2>
+        <p:panelGrid columns="2" styleClass="width-100">
+            <h:outputText value="#{msgs['customer.card.details.type']}"/>
+            <h:outputText value="#{customerCardsBean.selectedCard.cardType.name}"/>
+
+            <h:outputText value="#{msgs['customer.card.details.status']}"/>
+            <h:outputText value="#{customerCardsBean.selectedCard.status.name}"/>
+
+            <h:outputText value="#{msgs['customer.card.details.number']}"/>
+            <h:outputText value="#{customerCardsBean.selectedCard.cardNumber}"/>
+
+            <h:outputText value="#{msgs['customer.card.details.effDate']}"/>
+            <h:outputText value="#{customerCardsBean.selectedCard.effectiveDate}"
+                          converter="#{dateConverter}"/>
+
+            <h:outputText value="#{msgs['customer.card.details.expDate']}"/>
+            <h:outputText value="#{customerCardsBean.selectedCard.expirationDate}"
+                          converter="#{dateConverter}"/>
+
+            <h:outputText value="#{msgs['customer.card.details.cardholder']}"/>
+            <h:outputText value="#{customerCardsBean.selectedCard.cardHolder}"/>
+        </p:panelGrid>
+
+        <br/>
+        <h2>#{msgs['customer.card.details.account']}</h2>
+        <p:panelGrid columns="2" styleClass="width-100">
+            <h:outputText value="#{msgs['customer.card.details.accNumber']}"/>
+            <h:outputText value="#{customerCardsBean.selectedCard.account.accountNumber}"/>
+
+            <h:outputText value="#{msgs['customer.card.details.accStatus']}"/>
+            <h:outputText value="#{customerCardsBean.selectedCard.account.status.name}"/>
+
+            <h:outputText value="#{msgs['customer.card.details.currency']}"/>
+            <h:outputText value="#{customerCardsBean.selectedCard.account.currency}"/>
+
+            <h:outputText value="#{msgs['customer.card.details.balance']}"/>
+            <h:outputText value="#{customerCardsBean.selectedCard.account.balance}">
+                <f:convertNumber type="currency" currencySymbol="" groupingUsed="false"/>
+            </h:outputText>
+
+            <h:outputText value="#{msgs['customer.card.details.limit']}"
+                          rendered="#{customerCardsBean.selectedCard.account.type eq 'LOAN'}"/>
+            <h:outputText value="#{customerCardsBean.selectedCard.account.limit}"
+                          rendered="#{customerCardsBean.selectedCard.account.type eq 'LOAN'}">
+                <f:convertNumber type="currency" currencySymbol="" groupingUsed="false"/>
+            </h:outputText>
+        </p:panelGrid>
+
+        <br/>
+        <h2>#{msgs['customer.card.details.limits']}</h2>
+        <p:panelGrid columns="2" styleClass="width-100">
+            <h:outputText value="#{msgs['customer.card.details.numberTransactions']}"/>
+            <h:outputText value="5 transactions"/>
+
+            <h:outputText value="#{msgs['customer.card.details.numberWithdrawals']}"/>
+            <h:outputText value="2 transactions"/>
+
+            <h:outputText value="#{msgs['customer.card.details.transaction']}"/>
+            <h:outputText value="3000 #{customerCardsBean.selectedCard.account.currency}"/>
+
+            <h:outputText value="#{msgs['customer.card.details.withdrawal']}"/>
+            <h:outputText value="6000 #{customerCardsBean.selectedCard.account.currency}"/>
+        </p:panelGrid>
+
+        <br/>
+        <div class="commandButtons-1">
+            <p:commandButton value="#{msgs['customer.card.details.back']}"
+                             oncomplete="PF('cardDetailsDialog').hide();"/>
+        </div>
+    </h:form>
+    <f:facet name="footer">
+        <h:outputText/>
+    </f:facet>
+</ui:composition>

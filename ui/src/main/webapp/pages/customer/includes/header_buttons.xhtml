@@ -1,0 +1,13 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <p:button outcome="Main" value="#{msgs['customer.header.main']}" icon="fa fa-reply" >
+        <f:param name="i" value="-1"/>
+    </p:button>
+    <p:commandButton action="#{customerLoginBean.logout()}" value="#{msgs['customer.header.exit']}" icon="fa fa-sign-out"/>
+
+</ui:composition>
